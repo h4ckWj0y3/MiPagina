@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compliance Framework Matcher — Which Standard Applies to Your Business?</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@400;500&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0D0D0D;--ink2:#3A3A3A;--ink3:#777;
+  --line:#E5E5E5;--bg:#F8F7F4;--white:#FFFFFF;
+  --green:#0B5E48;--green-bright:#16A676;--green-pale:#E2F4EE;
+  --amber:#7A3F00;--amber-pale:#FDF0E0;
+  --red:#8B1A1A;--red-pale:#FBE9E9;
+  --blue:#0C3D6B;--blue-pale:#E6F0FA;
+  --purple:#3D2080;--purple-pale:#EEE9FF;
+  --teal:#065C5C;--teal-pale:#E0F4F4;
+  --r:10px;--r-sm:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+nav{background:var(--white);border-bottom:1px solid var(--line);padding:0 2rem;height:58px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;text-decoration:none;color:var(--ink)}
+.logo em{color:var(--green-bright);font-style:normal}
+.nav-btn{font-size:12px;padding:7px 18px;border-radius:100px;background:var(--green);color:#fff;text-decoration:none;font-weight:500;transition:opacity .15s}
+.nav-btn:hover{opacity:.85}
+
+.hero{max-width:680px;margin:0 auto;padding:3.5rem 1.5rem 2rem;text-align:center}
+.tag{display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--line);border-radius:100px;font-size:11px;color:var(--ink3);padding:4px 12px;font-family:'DM Mono',monospace;margin-bottom:1.5rem}
+h1{font-family:'Syne',sans-serif;font-size:clamp(28px,5vw,46px);font-weight:700;line-height:1.1;margin-bottom:1rem}
+h1 span{color:var(--green-bright)}
+.subtitle{font-size:16px;color:var(--ink2);line-height:1.7}
+
+/* WIZARD */
+.wizard{max-width:720px;margin:0 auto;padding:0 1.5rem 4rem}
+.step-indicator{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:2rem}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--line);transition:background .3s}
+.step-dot.active{background:var(--green-bright);width:24px;border-radius:4px}
+.step-dot.done{background:var(--green)}
+
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:2rem;margin-bottom:1.5rem}
+.card-label{font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3);letter-spacing:.05em;margin-bottom:.75rem}
+.card h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:600;margin-bottom:1.5rem;line-height:1.3}
+
+.option-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px}
+.opt{border:1.5px solid var(--line);border-radius:var(--r-sm);padding:14px;cursor:pointer;transition:border-color .15s,background .15s;background:var(--bg)}
+.opt:hover{border-color:var(--green-bright);background:var(--green-pale)}
+.opt.sel{border-color:var(--green);background:var(--green-pale)}
+.opt.multi-sel{border-color:var(--green);background:var(--green-pale)}
+.opt-icon{font-size:20px;margin-bottom:6px}
+.opt-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.opt-sub{font-size:11px;color:var(--ink3)}
+
+.btn-row{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem}
+.btn{padding:10px 24px;border-radius:100px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .15s}
+.btn-ghost{background:none;border:1px solid var(--line);color:var(--ink2)}
+.btn-ghost:hover{border-color:var(--ink2)}
+.btn-primary{background:var(--green);color:#fff;border:none}
+.btn-primary:hover{opacity:.88}
+.btn-primary:disabled{opacity:.3;cursor:default}
+
+/* RESULTS */
+.results-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem}
+.results-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:700}
+.results-sub{font-size:14px;color:var(--ink2);margin-top:4px}
+.mandatory-label{font-size:12px;font-weight:500;color:var(--red);background:var(--red-pale);padding:4px 10px;border-radius:100px}
+
+.fw-card{border:1px solid var(--line);border-radius:var(--r);margin-bottom:1rem;overflow:hidden;background:var(--white)}
+.fw-header{display:flex;align-items:center;gap:14px;padding:1.25rem 1.5rem;cursor:pointer;user-select:none}
+.fw-badge{width:44px;height:44px;border-radius:var(--r-sm);display:grid;place-items:center;font-size:11px;font-weight:700;font-family:'DM Mono',monospace;flex-shrink:0;letter-spacing:.02em}
+.fw-info{flex:1}
+.fw-name{font-size:15px;font-weight:500;margin-bottom:2px}
+.fw-tagline{font-size:12px;color:var(--ink3)}
+.fw-pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:10px;padding:3px 9px;border-radius:100px;font-weight:500}
+.pill-mandatory{background:var(--red-pale);color:var(--red)}
+.pill-recommended{background:var(--green-pale);color:var(--green)}
+.pill-relevant{background:var(--amber-pale);color:var(--amber)}
+.fw-chevron{color:var(--ink3);transition:transform .2s;flex-shrink:0}
+.fw-card.open .fw-chevron{transform:rotate(180deg)}
+.fw-body{display:none;border-top:1px solid var(--line);padding:1.25rem 1.5rem}
+.fw-card.open .fw-body{display:block}
+.fw-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+@media(max-width:480px){.fw-cols{grid-template-columns:1fr}}
+.fw-col-title{font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3);letter-spacing:.04em;margin-bottom:.5rem}
+.fw-item{font-size:13px;color:var(--ink2);padding:3px 0;display:flex;gap:6px;align-items:flex-start}
+.fw-item::before{content:'—';color:var(--line);flex-shrink:0}
+.fw-why{font-size:13px;color:var(--ink2);line-height:1.65;margin-bottom:.75rem;padding:12px 14px;background:var(--bg);border-radius:var(--r-sm)}
+.complexity-row{display:flex;align-items:center;gap:10px;margin-top:.75rem}
+.complexity-label{font-size:11px;color:var(--ink3);width:80px}
+.cx-bar-wrap{flex:1;height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+.cx-bar{height:5px;border-radius:3px;background:var(--green-bright)}
+.cx-time{font-size:11px;color:var(--ink3)}
+
+.cta-box{background:linear-gradient(135deg,var(--green) 0%,#0B4035 100%);color:#fff;border-radius:var(--r);padding:2rem;margin-top:2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.cta-box h3{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:.25rem}
+.cta-box p{font-size:13px;opacity:.85;line-height:1.6}
+.cta-box a{display:inline-block;background:#fff;color:var(--green);text-decoration:none;padding:11px 24px;border-radius:100px;font-size:13px;font-weight:600;white-space:nowrap;transition:opacity .15s}
+.cta-box a:hover{opacity:.9}
+
+footer{text-align:center;padding:2rem;font-size:11px;color:var(--ink3);border-top:1px solid var(--line)}
+footer a{color:var(--green-bright);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="#" class="logo">// <em>Your Name</em> Cybersecurity</a>
+  <a href="https://calendly.com/YOUR-LINK" class="nav-btn" target="_blank">Book a free call</a>
+</nav>
+
+<div class="hero">
+  <div class="tag">🗺 Free interactive tool</div>
+  <h1>Which compliance framework<br><span>applies to your business?</span></h1>
+  <p class="subtitle">Answer 4 questions. Get a personalised map of mandatory and recommended frameworks — with timelines and next steps.</p>
+</div>
+
+<div class="wizard">
+  <div class="step-indicator" id="steps"></div>
+  <div id="wizard-content"></div>
+</div>
+
+<footer>© 2025 <a href="#">Your Name Cybersecurity</a> · Free resource — share freely · <a href="mailto:you@yourdomain.com">Get expert guidance</a></footer>
+
+<script>
+const steps=[
+  {label:'Industry',question:'What industry are you in?',multi:false,opts:[
+    {icon:'🏥',name:'Healthcare',sub:'Clinics, hospitals, health tech',id:'healthcare'},
+    {icon:'💳',name:'Finance & Fintech',sub:'Banking, payments, lending',id:'finance'},
+    {icon:'🛒',name:'Retail & E-commerce',sub:'Online or in-store sales',id:'retail'},
+    {icon:'⚖️',name:'Legal & Professional',sub:'Law, accounting, consulting',id:'legal'},
+    {icon:'💻',name:'Technology / SaaS',sub:'Software, platforms, APIs',id:'tech'},
+    {icon:'🏭',name:'Manufacturing & OT',sub:'Industrial, critical infrastructure',id:'manufacturing'},
+    {icon:'🎓',name:'Education',sub:'Schools, universities, EdTech',id:'education'},
+    {icon:'🏛',name:'Public sector / Gov',sub:'Government, defence, utilities',id:'public'},
+    {icon:'🌐',name:'Other / Multiple',sub:'Cross-sector or unlisted',id:'other'},
+  ]},
+  {label:'Region',question:'Where does your business primarily operate?',multi:true,opts:[
+    {icon:'🇪🇺',name:'European Union',sub:'GDPR, NIS2 territory',id:'eu'},
+    {icon:'🇬🇧',name:'United Kingdom',sub:'UK GDPR, DPDI',id:'uk'},
+    {icon:'🇺🇸',name:'United States',sub:'HIPAA, CCPA, NIST territory',id:'us'},
+    {icon:'🇰🇷',name:'South Korea',sub:'PIPA, ISMS-P territory',id:'kr'},
+    {icon:'🌏',name:'Asia-Pacific',sub:'PDPA, MAS, APRA',id:'apac'},
+    {icon:'🌍',name:'Global / Multiple',sub:'Cross-border operations',id:'global'},
+  ]},
+  {label:'Size & data',question:'How large is your organisation and what data do you handle?',multi:false,opts:[
+    {icon:'🌱',name:'Startup / SME',sub:'Under 50 people, limited data',id:'sme'},
+    {icon:'🏢',name:'Mid-market',sub:'50–500 people',id:'mid'},
+    {icon:'🏗',name:'Enterprise',sub:'500+ people, complex data flows',id:'enterprise'},
+    {icon:'💳',name:'We handle card payments',sub:'Any business taking card payments',id:'pci'},
+    {icon:'🏥',name:'We handle health data',sub:'Patient or clinical records',id:'health-data'},
+    {icon:'🤖',name:'We use / deploy AI systems',sub:'AI products or internal AI tools',id:'ai-user'},
+  ]},
+  {label:'Goals',question:'What is your primary compliance goal?',multi:false,opts:[
+    {icon:'🔒',name:'Achieve certification',sub:'Formal ISO or SOC 2 audit',id:'certify'},
+    {icon:'⚖️',name:'Meet legal obligations',sub:'Avoid fines and regulatory risk',id:'legal-req'},
+    {icon:'🤝',name:'Win enterprise contracts',sub:'Customer due diligence / procurement',id:'sales'},
+    {icon:'🛡',name:'Improve security posture',sub:'Genuinely reduce risk',id:'security'},
+    {icon:'🔄',name:'M&A or due diligence',sub:'Acquisition target or buyer prep',id:'ma'},
+  ]},
+];
+
+const frameworks={
+  'ISO 27001':{badge:'27001',color:'#0B5E48',bg:'#E2F4EE',tagline:'Information security management system',why:{healthcare:'Required by NHS suppliers and increasingly expected by private healthcare commissioners. Aligns with DSPT.',finance:'Baseline expectation for financial services technology suppliers. Underpins many customer contracts.',retail:'E-commerce businesses handling card data use ISO 27001 alongside PCI DSS.',legal:'Increasingly required by large law firm clients and insurers as a condition of engagement.',tech:'The default enterprise procurement requirement — often a sales prerequisite.',manufacturing:'Extends well to OT environments; pairs with IEC 62443 for industrial systems.',education:'Required by many research funding bodies and national cyber programmes.',public:'Core requirement for government suppliers under many national frameworks.',other:'Universal starting point — relevant to every industry.'},keys:['93 Annex A controls','ISMS documentation','Internal audit & management review','External certification audit'],complexity:70,time:'6–18 months'},
+  'SOC 2':{badge:'SOC 2',color:'#0C3D6B',bg:'#E6F0FA',tagline:'Trust Services Criteria — US market standard',why:{tech:'Essential for SaaS companies selling into US enterprise. Type II report is the most credible.',finance:'Required by US financial institution partners and investors.',healthcare:'Complements HIPAA for health tech companies selling to US hospitals.',other:'Primary requirement for US market access.'},keys:['5 Trust Service Criteria','Type I (point in time) or Type II (12 months)','CPA-audited report','Customer-facing trust report'],complexity:65,time:'3–12 months'},
+  'GDPR':{badge:'GDPR',color:'#3D2080',bg:'#EEE9FF',tagline:'EU personal data protection law',why:{eu:'Mandatory for all organisations processing EU resident data.',uk:'UK GDPR applies in parallel — near-identical obligations.',retail:'Consumer data, marketing, cookies — all in scope.',healthcare:'Special category data rules apply to all health data.',tech:'SaaS platforms processing user data must comply.',legal:'Client data processed on behalf of organisations — processor obligations.',other:'If you have EU customers or employees, GDPR applies.'},keys:['Lawful basis for processing','Data subject rights','DPIAs for high-risk processing','Breach notification (72 hours)','DPO appointment (where required)'],complexity:55,time:'3–9 months'},
+  'NIS2':{badge:'NIS2',color:'#065C5C',bg:'#E0F4F4',tagline:'EU network & information systems directive',why:{eu:'Mandatory for medium/large essential and important entities from October 2024.',public:'Public sector entities are directly in scope.',manufacturing:'Critical infrastructure and industrial operators in scope.',healthcare:'Health sector is an essential entity category.',finance:'Financial infrastructure is a core essential sector.',other:'Check if you qualify as essential or important entity.'},keys:['Risk management measures','Incident reporting (24h/72h)','Supply chain security','Board accountability','Sanctions up to €10M or 2% global turnover'],complexity:60,time:'6–12 months'},
+  'PCI DSS':{badge:'PCI DSS',color:'#7A3F00',bg:'#FDF0E0',tagline:'Payment card industry data security standard',why:{retail:'Mandatory if you accept, store, transmit or process cardholder data.',finance:'Required for all payment processors, issuers, and acquirers.',pci:'Applies directly to your business regardless of other factors.',other:'If you take card payments, this is mandatory — no exceptions.'},keys:['12 core requirements','SAQ (Self Assessment) or QSA audit','Quarterly network scans','Annual penetration testing','Tokenisation recommended'],complexity:75,time:'3–12 months'},
+  'HIPAA':{badge:'HIPAA',color:'#8B1A1A',bg:'#FBE9E9',tagline:'US health data privacy and security rule',why:{healthcare:'Mandatory for US covered entities and their business associates.',tech:'Health tech selling to US hospitals — business associate agreements required.',health_data:'Any processing of US patient health data triggers HIPAA obligations.',us:'US healthcare data is always in scope.'},keys:['Privacy Rule — patient rights','Security Rule — administrative, physical, technical safeguards','Breach notification rule','Business Associate Agreements','Annual risk analysis'],complexity:65,time:'6–12 months'},
+  'ISO 42001':{badge:'42001',color:'#3D2080',bg:'#EEE9FF',tagline:'AI management system standard',why:{tech:'First global certifiable standard for responsible AI — competitive differentiator for AI companies.',ai_user:'If you develop or deploy AI products, this demonstrates governance maturity.',finance:'Financial regulators are increasing AI scrutiny — proactive certification is advantageous.',healthcare:'AI in clinical settings requires rigorous governance — ISO 42001 provides the framework.',other:'Emerging requirement — getting ahead now positions you ahead of regulation.'},keys:['AI risk assessment framework','Responsible AI policy','Model governance and documentation','Human oversight controls','Supplier AI accountability'],complexity:50,time:'4–10 months'},
+  'PIPA / ISMS-P':{badge:'PIPA',color:'#065C5C',bg:'#E0F4F4',tagline:'South Korea personal data & ISMS certification',why:{kr:'Mandatory for organisations processing Korean personal information above defined thresholds.',other:'ISMS-P certification required for Korean internet service providers and some financial entities.'},keys:['Personal information processing policies','Data subject rights management','ISMS-P certification for large ISPs','Cross-border transfer controls','Korea Internet & Security Agency (KISA) oversight'],complexity:70,time:'6–15 months'},
+  'NIST CSF':{badge:'NIST',color:'#0C3D6B',bg:'#E6F0FA',tagline:'US cybersecurity framework — best practice',why:{us:'De facto standard for US organisations — especially government contractors.',public:'Required or expected by US federal agencies and CISA.',manufacturing:'Strong OT security guidance in CSF 2.0.',tech:'Widely used as a security programme framework alongside SOC 2.',other:'Excellent baseline framework — not certifiable but widely recognised.'},keys:['6 functions: Govern, Identify, Protect, Detect, Respond, Recover','CSF 2.0 released 2024','Maps to ISO 27001 controls','Tiered maturity model'],complexity:40,time:'3–9 months'},
+  'IEC 62443':{badge:'62443',color:'#7A3F00',bg:'#FDF0E0',tagline:'Industrial control & OT security standard',why:{manufacturing:'The primary OT/ICS security standard — essential for industrial operators.',public:'Critical infrastructure operators are frequently required to demonstrate IEC 62443 compliance.',other:'Relevant if you operate SCADA, PLCs, or industrial networks.'},keys:['Security levels 1–4','Zone and conduit model','Asset owner and supplier requirements','Risk assessment for operational technology','Certification scheme available'],complexity:80,time:'12–24 months'},
+  'Cyber Essentials':{badge:'CE+',color:'#0B5E48',bg:'#E2F4EE',tagline:'UK government-backed baseline scheme',why:{uk:'Required for UK government contracts handling personal data or sensitive information.',legal:'Demonstrates baseline security for UK professional services firms.',other:'Lowest-cost first certification — ideal UK starting point before ISO 27001.'},keys:['5 technical controls','Boundary firewalls','Secure configuration','User access control','Malware protection','Patch management'],complexity:25,time:'1–3 months'},
+};
+
+const industryFrameworks={
+  healthcare:['GDPR','ISO 27001','HIPAA','NIS2','ISO 42001'],
+  finance:['GDPR','ISO 27001','SOC 2','PCI DSS','NIS2','ISO 42001'],
+  retail:['GDPR','PCI DSS','ISO 27001','Cyber Essentials'],
+  legal:['GDPR','ISO 27001','Cyber Essentials','SOC 2'],
+  tech:['ISO 27001','SOC 2','GDPR','ISO 42001','NIST CSF'],
+  manufacturing:['ISO 27001','IEC 62443','NIS2','NIST CSF'],
+  education:['GDPR','ISO 27001','Cyber Essentials','NIST CSF'],
+  public:['GDPR','NIS2','ISO 27001','NIST CSF','Cyber Essentials'],
+  other:['ISO 27001','GDPR','NIST CSF','SOC 2'],
+};
+
+const mandatoryTriggers={
+  'GDPR':r=>r.regions.some(x=>['eu','uk'].includes(x))||r.industry!=='us-only',
+  'NIS2':r=>r.regions.includes('eu')&&['healthcare','finance','manufacturing','public','tech'].includes(r.industry),
+  'HIPAA':r=>r.regions.includes('us')&&(r.industry==='healthcare'||r.size==='health-data'),
+  'PCI DSS':r=>r.size==='pci'||r.industry==='retail'||r.industry==='finance',
+  'PIPA / ISMS-P':r=>r.regions.includes('kr'),
+  'Cyber Essentials':r=>r.regions.includes('uk')&&r.goals==='legal-req',
+};
+
+const goalBoost={
+  certify:['ISO 27001','SOC 2','ISO 42001','Cyber Essentials'],
+  'legal-req':['GDPR','NIS2','HIPAA','PCI DSS'],
+  sales:['ISO 27001','SOC 2','Cyber Essentials'],
+  security:['NIST CSF','ISO 27001','IEC 62443'],
+  ma:['ISO 27001','SOC 2','NIST CSF'],
+};
+
+let answers={industry:'',regions:[],size:'',goals:''};
+let cur=0;
+
+function renderSteps(){
+  const el=document.getElementById('steps');
+  el.innerHTML=steps.map((_,i)=>`<div class="step-dot ${i<cur?'done':i===cur?'active':''}"></div>`).join('');
+}
+
+function renderStep(){
+  renderSteps();
+  const step=steps[cur];
+  const isMulti=step.multi;
+  const html=`
+    <div class="card">
+      <div class="card-label">Step ${cur+1} of ${steps.length} — ${step.label}</div>
+      <h2>${step.question}</h2>
+      <div class="option-grid" id="opts"></div>
+      <div class="btn-row">
+        ${cur>0?'<button class="btn btn-ghost" onclick="back()">Back</button>':''}
+        <button class="btn btn-primary" id="btn-next" onclick="next()" disabled>${cur===steps.length-1?'See my frameworks →':'Next →'}</button>
+      </div>
+    </div>`;
+  document.getElementById('wizard-content').innerHTML=html;
+  const opts=document.getElementById('opts');
+  step.opts.forEach(o=>{
+    const d=document.createElement('div');
+    d.className='opt';
+    d.dataset.id=o.id;
+    d.innerHTML=`<div class="opt-icon">${o.icon}</div><div class="opt-name">${o.name}</div><div class="opt-sub">${o.sub}</div>`;
+    if(isMulti){
+      d.onclick=()=>{
+        d.classList.toggle('multi-sel');
+        const sel=document.querySelectorAll('.multi-sel');
+        document.getElementById('btn-next').disabled=sel.length===0;
+      };
+    } else {
+      d.onclick=()=>{
+        document.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+        d.classList.add('sel');
+        document.getElementById('btn-next').disabled=false;
+      };
+    }
+    opts.appendChild(d);
+  });
+  restoreSelections();
+}
+
+function restoreSelections(){
+  const step=steps[cur];
+  if(step.multi&&answers.regions.length){
+    answers.regions.forEach(r=>{
+      const el=document.querySelector(`.opt[data-id="${r}"]`);
+      if(el){el.classList.add('multi-sel');document.getElementById('btn-next').disabled=false;}
+    });
+  } else {
+    const key=['industry','','size','goals'][cur];
+    if(answers[key]){
+      const el=document.querySelector(`.opt[data-id="${answers[key]}"]`);
+      if(el){el.classList.add('sel');document.getElementById('btn-next').disabled=false;}
+    }
+  }
+}
+
+function next(){
+  const step=steps[cur];
+  if(step.multi){
+    answers.regions=[...document.querySelectorAll('.multi-sel')].map(el=>el.dataset.id);
+  } else {
+    const sel=document.querySelector('.opt.sel');
+    if(!sel)return;
+    if(cur===0)answers.industry=sel.dataset.id;
+    if(cur===2)answers.size=sel.dataset.id;
+    if(cur===3)answers.goals=sel.dataset.id;
+  }
+  cur++;
+  if(cur>=steps.length){showResults();}else{renderStep();}
+}
+
+function back(){if(cur>0){cur--;renderStep();}}
+
+function showResults(){
+  renderSteps();
+  const industry=answers.industry;
+  const regions=answers.regions;
+  const size=answers.size;
+  const goals=answers.goals;
+
+  let scored={};
+  (industryFrameworks[industry]||industryFrameworks.other).forEach(f=>{scored[f]=(scored[f]||0)+10;});
+  (goalBoost[goals]||[]).forEach(f=>{scored[f]=(scored[f]||0)+5;});
+  if(regions.includes('eu')||regions.includes('uk')){scored['GDPR']=(scored['GDPR']||0)+8;scored['NIS2']=(scored['NIS2']||0)+5;}
+  if(regions.includes('us')){scored['NIST CSF']=(scored['NIST CSF']||0)+6;scored['SOC 2']=(scored['SOC 2']||0)+6;}
+  if(regions.includes('kr')){scored['PIPA / ISMS-P']=(scored['PIPA / ISMS-P']||0)+15;}
+  if(size==='pci'||industry==='finance'||industry==='retail'){scored['PCI DSS']=(scored['PCI DSS']||0)+10;}
+  if(size==='ai-user'||industry==='tech'){scored['ISO 42001']=(scored['ISO 42001']||0)+6;}
+  if(industry==='manufacturing'){scored['IEC 62443']=(scored['IEC 62443']||0)+10;}
+  if(regions.includes('uk')){scored['Cyber Essentials']=(scored['Cyber Essentials']||0)+5;}
+
+  const sorted=Object.entries(scored).sort((a,b)=>b[1]-a[1]).map(([name])=>name).filter(n=>frameworks[n]);
+  const mandatory=sorted.filter(n=>mandatoryTriggers[n]&&mandatoryTriggers[n]({industry,regions,size,goals}));
+  const recommended=sorted.filter(n=>!mandatory.includes(n));
+
+  let html=`
+    <div class="results-header">
+      <div>
+        <div class="results-title">Your compliance framework map</div>
+        <div class="results-sub">Based on: ${answers.industry} · ${answers.regions.join(', ')||'region not specified'} · ${answers.goals}</div>
+      </div>
+      ${mandatory.length?`<div class="mandatory-label">⚠ ${mandatory.length} mandatory obligation${mandatory.length>1?'s':''}</div>`:''}
+    </div>`;
+
+  if(mandatory.length){
+    html+=`<div style="font-size:12px;font-family:'DM Mono',monospace;color:var(--ink3);letter-spacing:.04em;margin-bottom:.75rem">MANDATORY — LEGAL OBLIGATIONS</div>`;
+    mandatory.forEach(name=>html+=renderFwCard(name,'mandatory'));
+    html+=`<div style="font-size:12px;font-family:'DM Mono',monospace;color:var(--ink3);letter-spacing:.04em;margin:1.5rem 0 .75rem">RECOMMENDED FOR YOUR PROFILE</div>`;
+  }
+  recommended.slice(0,5).forEach(name=>html+=renderFwCard(name,'recommended'));
+  html+=`<div class="cta-box"><div style="flex:1"><h3>Want expert guidance on where to start?</h3><p>A free 30-minute call will map your exact obligations, prioritise by risk and effort, and give you a clear roadmap — no jargon, no sales pitch.</p></div><a href="https://calendly.com/YOUR-LINK" target="_blank">Book a free strategy call</a></div>`;
+  html+=`<div style="text-align:center;margin-top:1.5rem"><button class="btn btn-ghost" onclick="restart()">Start over</button></div>`;
+  document.getElementById('wizard-content').innerHTML=html;
+}
+
+function renderFwCard(name,type){
+  const fw=frameworks[name];
+  if(!fw)return'';
+  const industry=answers.industry;
+  const why=fw.why[industry]||fw.why.other||Object.values(fw.why)[0];
+  return`<div class="fw-card" id="fw-${name.replace(/\s/g,'-')}">
+    <div class="fw-header" onclick="toggleFw(this.parentElement)">
+      <div class="fw-badge" style="background:${fw.bg};color:${fw.color}">${fw.badge}</div>
+      <div class="fw-info">
+        <div class="fw-name">${name}</div>
+        <div class="fw-tagline">${fw.tagline}</div>
+      </div>
+      <div class="fw-pills"><span class="pill pill-${type}">${type==='mandatory'?'Mandatory':'Recommended'}</span></div>
+      <svg class="fw-chevron" width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="fw-body">
+      <div class="fw-why">${why}</div>
+      <div class="fw-cols">
+        <div>
+          <div class="fw-col-title">KEY REQUIREMENTS</div>
+          ${fw.keys.map(k=>`<div class="fw-item">${k}</div>`).join('')}
+        </div>
+        <div>
+          <div class="fw-col-title">IMPLEMENTATION</div>
+          <div class="complexity-row"><span class="complexity-label">Complexity</span><div class="cx-bar-wrap"><div class="cx-bar" style="width:${fw.complexity}%"></div></div></div>
+          <div class="complexity-row"><span class="complexity-label">Timeline</span><div class="cx-time">${fw.time}</div></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleFw(el){el.classList.toggle('open');}
+function restart(){cur=0;answers={industry:'',regions:[],size:'',goals:''};renderStep();}
+
+renderStep();
+</script>
+</body>
+</html>

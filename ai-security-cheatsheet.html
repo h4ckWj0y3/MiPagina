@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Security Risk Cheat Sheet — Top Threats & Mitigations</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0D0D0D;--ink2:#3A3A3A;--ink3:#777;
+  --line:#E5E5E5;--bg:#0D0F12;--surface:#161A1F;--surface2:#1E2329;
+  --green:#16A676;--green-pale:rgba(22,166,118,.12);
+  --red:#E05252;--red-pale:rgba(224,82,82,.12);
+  --amber:#E09B2D;--amber-pale:rgba(224,155,45,.12);
+  --blue:#4D9FEC;--blue-pale:rgba(77,159,236,.12);
+  --purple:#A78BFA;--purple-pale:rgba(167,139,250,.12);
+  --r:10px;--r-sm:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:#E8EAED;min-height:100vh}
+nav{background:var(--surface);border-bottom:1px solid rgba(255,255,255,.08);padding:0 2rem;height:58px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;text-decoration:none;color:#E8EAED}
+.logo em{color:var(--green);font-style:normal}
+.nav-btn{font-size:12px;padding:7px 18px;border-radius:100px;background:var(--green);color:#fff;text-decoration:none;font-weight:500}
+
+.hero{max-width:780px;margin:0 auto;padding:3.5rem 1.5rem 2rem;text-align:center}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(22,166,118,.4);border-radius:100px;font-size:11px;color:var(--green);padding:4px 14px;font-family:'DM Mono',monospace;margin-bottom:1.5rem;background:var(--green-pale)}
+h1{font-family:'Syne',sans-serif;font-size:clamp(26px,5vw,46px);font-weight:700;line-height:1.1;margin-bottom:.75rem;color:#fff}
+h1 span{color:var(--green)}
+.subtitle{font-size:15px;color:#9CA3AF;line-height:1.7}
+
+/* FILTER */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:2rem auto 0;max-width:780px;padding:0 1.5rem}
+.ftag{font-size:12px;padding:6px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#9CA3AF;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.ftag.on,.ftag:hover{border-color:var(--green);color:var(--green);background:var(--green-pale)}
+
+/* GRID */
+.grid{max-width:1100px;margin:2rem auto 0;padding:0 1.5rem 4rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
+
+/* THREAT CARD */
+.threat{background:var(--surface);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);overflow:hidden;transition:border-color .2s,transform .2s;cursor:pointer}
+.threat:hover{border-color:rgba(255,255,255,.2);transform:translateY(-2px)}
+.threat.open{border-color:rgba(255,255,255,.2)}
+.t-header{padding:1.25rem 1.25rem .75rem;display:flex;align-items:flex-start;gap:12px}
+.t-icon{width:40px;height:40px;border-radius:var(--r-sm);display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.t-meta{flex:1}
+.t-number{font-size:10px;font-family:'DM Mono',monospace;color:#6B7280;margin-bottom:3px}
+.t-name{font-size:15px;font-weight:500;color:#F9FAFB;line-height:1.3}
+.severity-pip{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.tags-row{display:flex;flex-wrap:wrap;gap:5px;padding:0 1.25rem .75rem}
+.tag-chip{font-size:10px;padding:2px 8px;border-radius:100px;font-family:'DM Mono',monospace;font-weight:500}
+.t-divider{height:1px;background:rgba(255,255,255,.06);margin:0 1.25rem}
+.t-body{display:none;padding:1rem 1.25rem 1.25rem}
+.threat.open .t-body{display:block}
+.body-section{margin-bottom:1rem}
+.body-section:last-child{margin-bottom:0}
+.body-label{font-size:10px;font-family:'DM Mono',monospace;color:#6B7280;letter-spacing:.05em;margin-bottom:.5rem}
+.body-text{font-size:13px;color:#D1D5DB;line-height:1.65}
+.mitigation-list{list-style:none}
+.mitigation-list li{font-size:13px;color:#D1D5DB;padding:5px 0;display:flex;gap:8px;align-items:flex-start;border-bottom:1px solid rgba(255,255,255,.04)}
+.mitigation-list li:last-child{border-bottom:none}
+.mit-check{color:var(--green);flex-shrink:0;margin-top:1px}
+.owasp-ref{display:inline-block;font-size:10px;font-family:'DM Mono',monospace;padding:3px 9px;border-radius:4px;background:rgba(77,159,236,.15);color:var(--blue);margin-top:.75rem;border:1px solid rgba(77,159,236,.25)}
+
+/* SEVERITY LEGEND */
+.legend{display:flex;gap:1.5rem;justify-content:center;margin:0 auto 1rem;padding:0 1.5rem;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#9CA3AF}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+
+/* CTA */
+.cta-strip{background:var(--surface2);border-top:1px solid rgba(255,255,255,.08);padding:2rem 1.5rem;text-align:center;margin-top:1rem}
+.cta-strip h3{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:.5rem}
+.cta-strip p{font-size:14px;color:#9CA3AF;margin-bottom:1.25rem;line-height:1.6;max-width:540px;margin-left:auto;margin-right:auto}
+.cta-strip a{display:inline-block;background:var(--green);color:#fff;text-decoration:none;padding:12px 28px;border-radius:100px;font-size:14px;font-weight:500;transition:opacity .15s}
+.cta-strip a:hover{opacity:.88}
+
+footer{text-align:center;padding:1.5rem;font-size:11px;color:#6B7280;border-top:1px solid rgba(255,255,255,.06)}
+footer a{color:var(--green);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="#" class="logo">// <em>Your Name</em> Cybersecurity</a>
+  <a href="https://calendly.com/YOUR-LINK" class="nav-btn" target="_blank">AI security assessment</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">🤖 AI security · 2025 edition</div>
+  <h1>AI Security Risk<br><span>Cheat Sheet</span></h1>
+  <p class="subtitle">The 12 highest-impact AI threats your organisation faces right now — with practical mitigations mapped to OWASP LLM Top 10 and NIST AI RMF.</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Critical</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>High</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Medium</div>
+</div>
+
+<div class="filter-bar" id="filters"></div>
+<div class="grid" id="grid"></div>
+
+<div class="cta-strip">
+  <h3>Is your organisation AI-secure?</h3>
+  <p>An AI security assessment maps your exposure across all 12 risk areas — covering tools your staff use, AI products you build, and supplier AI integrations. Book a free scoping call.</p>
+  <a href="https://calendly.com/YOUR-LINK" target="_blank">Book a free AI security call</a>
+</div>
+
+<footer>© 2025 <a href="#">Your Name Cybersecurity</a> · Mapped to OWASP LLM Top 10 v1.1 & NIST AI RMF · <a href="mailto:you@yourdomain.com">Contact</a></footer>
+
+<script>
+const threats=[
+  {num:'LLM01',name:'Prompt Injection',severity:'critical',severityColor:'#E05252',icon:'💉',iconBg:'rgba(224,82,82,.15)',categories:['LLM Apps','API Security'],owaspRef:'OWASP LLM01',
+   what:'Attackers craft malicious inputs that override an LLM\'s instructions, causing it to ignore system prompts, reveal confidential data, execute unintended actions, or impersonate users. Direct injection manipulates the user prompt; indirect injection embeds malicious instructions in data the model processes (emails, documents, web pages).',
+   impact:'Full system prompt disclosure, data exfiltration, unauthorised actions via agentic AI, bypassing access controls.',
+   mitigations:['Validate and sanitise all inputs before passing to the LLM — treat prompts as untrusted data','Implement privilege separation — the LLM should not have access to data or actions beyond its task scope','Use output validation to detect anomalous or policy-violating responses','Apply a secondary LLM or classifier to monitor for injection patterns in high-risk flows','Avoid passing sensitive system instructions in the same context window as user input','Log all LLM interactions for audit and anomaly detection']},
+  {num:'LLM02',name:'Sensitive Information Disclosure',severity:'critical',severityColor:'#E05252',icon:'🔓',iconBg:'rgba(224,82,82,.15)',categories:['Data Protection','GDPR'],owaspRef:'OWASP LLM02',
+   what:'LLMs may inadvertently reveal confidential information, internal system prompts, personal data, or proprietary business logic — either through normal operation or through targeted extraction attacks. Models trained on sensitive data may also "memorise" and reproduce it.',
+   impact:'GDPR/HIPAA breach, IP theft, credential exposure, regulatory sanctions.',
+   mitigations:['Classify data before feeding it to any AI system — never input personal, financial, or proprietary data without a lawful basis','Apply output filtering to detect and redact PII, credentials, or confidential terms in LLM responses','Define and enforce a data minimisation policy for AI tool usage','Conduct DPIAs for AI systems processing personal data','Use on-premise or private cloud LLM deployments for sensitive workloads','Audit vendor AI data retention and training policies']},
+  {num:'LLM03',name:'Training Data Poisoning',severity:'high',severityColor:'#E09B2D',icon:'☣️',iconBg:'rgba(224,155,45,.12)',categories:['Supply Chain','Model Security'],owaspRef:'OWASP LLM03',
+   what:'Attackers introduce malicious, biased, or misleading data into a model\'s training dataset, causing it to produce subtly wrong outputs, exhibit backdoor behaviours, or make systematically biased decisions at inference time.',
+   impact:'Subtle model manipulation, safety bypass, biased outputs, reputational damage.',
+   mitigations:['Validate provenance of all training data — maintain a data lineage record','Conduct adversarial testing of fine-tuned models before deployment','Apply statistical anomaly detection to training datasets','Use model cards and documentation to track training data sources','Prefer well-audited foundation models from reputable providers','Continuously monitor model outputs for distributional shift or unexpected behaviour']},
+  {num:'LLM04',name:'Model Denial of Service',severity:'medium',severityColor:'#4D9FEC',icon:'💥',iconBg:'rgba(77,159,236,.12)',categories:['Availability','Infrastructure'],owaspRef:'OWASP LLM04',
+   what:'Attackers exploit the computationally intensive nature of LLM inference by sending requests designed to consume maximum resources — extremely long inputs, recursive prompts, or context window flooding — causing service degradation or outage.',
+   impact:'Service outage, excessive API costs, SLA breach.',
+   mitigations:['Enforce strict input length limits and token budgets','Implement rate limiting and per-user quotas on all AI API endpoints','Monitor token consumption in real time and alert on anomalies','Use circuit breakers to throttle inference under load','Apply input validation to reject malformed or excessively long requests before they reach the model','Set cost alerts and hard spending caps on AI API accounts']},
+  {num:'LLM05',name:'Supply Chain Vulnerabilities',severity:'high',severityColor:'#E09B2D',icon:'⛓️',iconBg:'rgba(224,155,45,.12)',categories:['Supply Chain','Third-Party Risk'],owaspRef:'OWASP LLM05',
+   what:'AI supply chain attacks target pre-trained models, fine-tuning datasets, plugins, SDKs, and third-party API integrations. A compromised model repository, malicious plugin, or vulnerable SDK can introduce backdoors or malicious behaviour into your AI stack.',
+   impact:'Backdoored models, data exfiltration via plugins, full application compromise.',
+   mitigations:['Maintain an AI Bill of Materials (AI BOM) for all models, datasets, and dependencies','Only use models from verified, reputable sources with cryptographic integrity checks','Vet all LLM plugins and tools before deployment — apply the same scrutiny as any third-party software','Pin model versions and validate checksums before updating','Conduct security reviews of all AI SDK dependencies — apply SCA tooling','Review vendor AI security practices through questionnaires and contractual obligations']},
+  {num:'LLM06',name:'Excessive Agency',severity:'critical',severityColor:'#E05252',icon:'🤖',iconBg:'rgba(224,82,82,.15)',categories:['Agentic AI','Access Control'],owaspRef:'OWASP LLM06',
+   what:'When LLMs are given excessive autonomy, permissions, or the ability to take real-world actions (agentic AI), errors, hallucinations, or injection attacks can trigger unintended consequences — deleting data, sending emails, executing code, or making financial transactions without human oversight.',
+   impact:'Unintended data modification, financial loss, operational disruption, irreversible actions.',
+   mitigations:['Apply least-privilege principles — grant agents only the minimum permissions required for each task','Require human approval for all irreversible or high-risk actions (delete, send, transact, deploy)','Implement action logging and audit trails for all agentic operations','Design for reversibility — prefer actions that can be undone','Define and enforce guardrails on what actions the agent is permitted to initiate','Test agents adversarially — specifically attempt to trigger unintended action chains']},
+  {num:'LLM07',name:'System Prompt Leakage',severity:'high',severityColor:'#E09B2D',icon:'🧠',iconBg:'rgba(224,155,45,.12)',categories:['LLM Apps','IP Protection'],owaspRef:'OWASP LLM07',
+   what:'System prompts containing business logic, proprietary instructions, persona definitions, or sensitive configuration can be extracted by users through direct questioning, jailbreaks, or prompt injection. Once leaked, competitors can replicate your AI product or attackers can exploit disclosed business rules.',
+   impact:'IP theft, competitive advantage loss, attack surface disclosure.',
+   mitigations:['Never assume system prompts are secret — treat them as potentially exposed','Move sensitive logic out of the system prompt into application code or secure configuration','Test all deployed AI products for system prompt extraction using published jailbreak techniques','Use prompt injection detection layers to flag extraction attempts','Implement output filtering to catch accidental system prompt disclosure','Watermark or obfuscate proprietary prompts where possible']},
+  {num:'LLM08',name:'Vector & Embedding Weaknesses',severity:'medium',severityColor:'#4D9FEC',icon:'📐',iconBg:'rgba(77,159,236,.12)',categories:['RAG Systems','Data Security'],owaspRef:'OWASP LLM08',
+   what:'Retrieval-Augmented Generation (RAG) systems and embedding stores introduce new attack surfaces. Adversaries can poison vector databases with malicious documents, perform nearest-neighbour attacks to infer training data, or exploit weak access controls on embedded content to extract restricted information.',
+   impact:'RAG poisoning, unauthorised data retrieval, embedding inversion attacks.',
+   mitigations:['Apply access controls to your vector database — enforce document-level permissions mirroring source system controls','Validate and sanitise all documents before ingestion into vector stores','Implement input validation on queries before embedding and retrieval','Monitor retrieval patterns for anomalous or high-volume access','Use separate vector stores for different data sensitivity levels','Conduct adversarial testing of RAG pipelines specifically targeting retrieval manipulation']},
+  {num:'LLM09',name:'Misinformation & Hallucination Risk',severity:'high',severityColor:'#E09B2D',icon:'👻',iconBg:'rgba(224,155,45,.12)',categories:['Governance','Operational Risk'],owaspRef:'OWASP LLM09',
+   what:'LLMs confidently generate false, misleading, or fabricated information — including fake citations, incorrect legal/medical/financial advice, and invented facts. Organisations relying on AI outputs without verification face operational, legal, and reputational risk.',
+   impact:'Bad decisions, regulatory non-compliance, professional liability, customer harm.',
+   mitigations:['Implement mandatory human review for all AI outputs used in decision-making, advice, or customer-facing content','Apply grounding — use RAG or citation-based architectures so claims can be traced to verified sources','Define and communicate an acceptable use policy specifying where AI output requires verification','Conduct regular red-teaming to identify hallucination-prone use cases','Add UX cues to AI interfaces indicating outputs may contain errors','Monitor AI output accuracy through sampling and user feedback mechanisms']},
+  {num:'LLM10',name:'Unbounded Consumption',severity:'medium',severityColor:'#4D9FEC',icon:'💸',iconBg:'rgba(77,159,236,.12)',categories:['Cost Risk','Governance'],owaspRef:'OWASP LLM10',
+   what:'Without controls, AI resource consumption can spiral — through excessive API calls, context window overuse, automated pipelines running unintended loops, or shadow AI tool adoption. This creates unexpected financial exposure and budget risk.',
+   impact:'Runaway API costs, budget overruns, shadow AI procurement.',
+   mitigations:['Set hard spending limits and cost alerts on all AI API accounts','Implement per-user and per-team token quotas','Maintain a centralised inventory of all AI tools and API keys in use — eliminate shadow AI','Conduct regular AI cost audits and attribute costs to business units','Design AI pipelines with cost-aware architectures — cache responses, batch requests','Review and approve all new AI tool procurement through IT and security']},
+  {num:'GOV01',name:'Absence of AI Governance Policy',severity:'critical',severityColor:'#E05252',icon:'📋',iconBg:'rgba(224,82,82,.15)',categories:['Governance','Compliance'],owaspRef:'NIST AI RMF · ISO 42001',
+   what:'Most organisations have deployed AI tools — ChatGPT, Copilot, coding assistants, AI-powered SaaS — without a formal AI governance policy. This creates uncontrolled data leakage risk, compliance exposure under GDPR and sector regulations, and inability to demonstrate due diligence to regulators or customers.',
+   impact:'GDPR enforcement, failed audits, board liability, uncontrolled IP leakage.',
+   mitigations:['Draft and publish an AI Acceptable Use Policy covering approved tools, data handling rules, and prohibited uses','Classify data sensitivity levels and specify which levels can be input to external AI tools','Establish an AI register — inventory all AI systems, their purpose, data inputs, and risk level','Define roles and responsibilities for AI risk oversight (AI Risk Owner / AI Ethics Board)','Align policy with ISO 42001 AI Management System requirements','Conduct annual AI risk assessments and document findings for board review']},
+  {num:'GOV02',name:'AI Regulatory Non-Compliance',severity:'high',severityColor:'#E09B2D',icon:'⚖️',iconBg:'rgba(224,155,45,.12)',categories:['Compliance','Legal'],owaspRef:'EU AI Act · GDPR · ISO 42001',
+   what:'The EU AI Act (fully applicable from August 2026) introduces mandatory requirements for high-risk AI systems — with fines up to €35M or 7% of global turnover. Simultaneously, GDPR\'s automated decision-making rules (Article 22) and sector-specific AI regulations in finance and healthcare are increasingly enforced.',
+   impact:'Regulatory fines, product recalls, market access restrictions.',
+   mitigations:['Classify all AI systems under the EU AI Act risk tiers — identify any high-risk systems requiring mandatory conformity assessment','Conduct GDPR Article 22 assessments for any automated decision-making affecting individuals','Implement transparency mechanisms — inform users when they interact with AI','Prepare technical documentation required for high-risk AI system registration','Engage legal counsel on AI Act obligations and timelines specific to your products','Monitor FCA, EBA, and sector-specific AI regulatory guidance relevant to your industry']},
+];
+
+const allCategories=[...new Set(threats.flatMap(t=>t.categories))].sort();
+let activeFilter=null;
+
+function renderFilters(){
+  const el=document.getElementById('filters');
+  el.innerHTML='<button class="ftag on" onclick="setFilter(null,this)">All threats</button>'+
+    allCategories.map(c=>`<button class="ftag" onclick="setFilter('${c}',this)">${c}</button>`).join('');
+}
+
+function setFilter(cat,btn){
+  activeFilter=cat;
+  document.querySelectorAll('.ftag').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderGrid();
+}
+
+function renderGrid(){
+  const el=document.getElementById('grid');
+  const filtered=activeFilter?threats.filter(t=>t.categories.includes(activeFilter)):threats;
+  el.innerHTML=filtered.map(t=>`
+    <div class="threat" id="t-${t.num}" onclick="toggleThreat('${t.num}')">
+      <div class="t-header">
+        <div class="t-icon" style="background:${t.iconBg}">${t.icon}</div>
+        <div class="t-meta">
+          <div class="t-number">${t.num} · ${t.owaspRef}</div>
+          <div class="t-name">${t.name}</div>
+        </div>
+        <div class="severity-pip" style="background:${t.severityColor}"></div>
+      </div>
+      <div class="tags-row">
+        ${t.categories.map(c=>`<span class="tag-chip" style="background:rgba(255,255,255,.07);color:#9CA3AF">${c}</span>`).join('')}
+        <span class="tag-chip" style="background:${t.severityColor}22;color:${t.severityColor}">${t.severity}</span>
+      </div>
+      <div class="t-divider"></div>
+      <div class="t-body">
+        <div class="body-section">
+          <div class="body-label">WHAT IS IT</div>
+          <div class="body-text">${t.what}</div>
+        </div>
+        <div class="body-section">
+          <div class="body-label">BUSINESS IMPACT</div>
+          <div class="body-text" style="color:#FCA5A5">${t.impact}</div>
+        </div>
+        <div class="body-section">
+          <div class="body-label">MITIGATIONS</div>
+          <ul class="mitigation-list">
+            ${t.mitigations.map(m=>`<li><span class="mit-check">✓</span><span>${m}</span></li>`).join('')}
+          </ul>
+          <div class="owasp-ref">📎 ${t.owaspRef}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleThreat(num){
+  const el=document.getElementById('t-'+num);
+  el.classList.toggle('open');
+}
+
+renderFilters();
+renderGrid();
+</script>
+</body>
+</html>

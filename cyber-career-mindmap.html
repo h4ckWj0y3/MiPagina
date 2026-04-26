@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cybersecurity Career Mindmap — [Your Name]</title>
+<meta name="description" content="Interactive cybersecurity career mindmap — explore every role, path, and skill in cyber. Free resource from [Your Name] Cybersecurity.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#0F6E56;--green-light:#E1F5EE;--green-mid:#1D9E75;
+  --purple:#534AB7;--purple-light:#EEEDFE;
+  --amber:#854F0B;--amber-light:#FAEEDA;
+  --coral:#993C1D;--coral-light:#FAECE7;
+  --blue:#185FA5;--blue-light:#E6F1FB;
+  --teal:#085041;--teal-light:#E1F5EE;
+  --text:#1a1a1a;--text-sec:#555;--text-hint:#888;
+  --border:#e0e0e0;--bg:#f7f7f5;--surface:#fff;
+  --radius:12px;--radius-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}
+nav{background:var(--surface);border-bottom:1px solid #eee;padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{font-size:15px;font-weight:500;text-decoration:none;color:var(--text)}
+.nav-brand span{color:var(--green);font-family:'DM Mono',monospace}
+.nav-cta{font-size:13px;color:var(--green);text-decoration:none;border:1px solid var(--green);padding:6px 16px;border-radius:100px;transition:background .15s,color .15s}
+.nav-cta:hover{background:var(--green);color:#fff}
+.hero{max-width:760px;margin:0 auto;padding:3rem 2rem 1.5rem;text-align:center}
+.hero-tag{display:inline-block;background:var(--purple-light);color:var(--purple);font-size:11px;font-weight:500;padding:4px 12px;border-radius:100px;font-family:'DM Mono',monospace;letter-spacing:.04em;margin-bottom:1.25rem}
+.hero h1{font-size:clamp(26px,4vw,40px);font-weight:500;margin-bottom:.75rem;line-height:1.2}
+.hero p{font-size:15px;color:var(--text-sec);line-height:1.7}
+.instructions{font-size:13px;color:var(--text-hint);background:var(--surface);border:1px solid #eee;border-radius:100px;padding:8px 20px;display:inline-block;margin-top:1.25rem}
+.map-wrap{max-width:1100px;margin:1.5rem auto 0;padding:0 1.5rem 3rem}
+
+/* FILTER TABS */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem;justify-content:center}
+.filter-btn{font-size:12px;padding:6px 14px;border-radius:100px;border:1px solid var(--border);background:var(--surface);color:var(--text-sec);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.filter-btn.active,.filter-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-light)}
+
+/* DOMAIN SECTIONS */
+.domain{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1.25rem;overflow:hidden;transition:box-shadow .15s}
+.domain:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.domain-header{display:flex;align-items:center;gap:14px;padding:1rem 1.25rem;cursor:pointer;user-select:none}
+.domain-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:grid;place-items:center;flex-shrink:0;font-size:16px}
+.domain-title{font-size:15px;font-weight:500;flex:1}
+.domain-count{font-size:12px;color:var(--text-hint);font-family:'DM Mono',monospace}
+.domain-chevron{width:18px;height:18px;transition:transform .25s;color:var(--text-hint)}
+.domain.open .domain-chevron{transform:rotate(180deg)}
+.domain-body{display:none;padding:0 1.25rem 1.25rem;border-top:1px solid #f0f0f0}
+.domain.open .domain-body{display:block}
+.roles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:1rem}
+.role-card{border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;cursor:pointer;transition:border-color .15s,background .15s;background:var(--bg)}
+.role-card:hover,.role-card.active{border-color:var(--green);background:var(--green-light)}
+.role-name{font-size:13px;font-weight:500;margin-bottom:4px}
+.role-level{font-size:11px;color:var(--text-hint);font-family:'DM Mono',monospace}
+.role-detail{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-top:1rem;display:none}
+.role-detail.show{display:block}
+.rd-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;gap:1rem}
+.rd-title{font-size:16px;font-weight:500}
+.salary-pill{font-size:12px;font-weight:500;padding:4px 12px;border-radius:100px;background:var(--green-light);color:var(--green);white-space:nowrap}
+.rd-desc{font-size:13px;color:var(--text-sec);line-height:1.65;margin-bottom:1rem}
+.rd-cols{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:500px){.rd-cols{grid-template-columns:1fr}}
+.rd-section-title{font-size:11px;font-weight:500;color:var(--text-hint);letter-spacing:.05em;font-family:'DM Mono',monospace;margin-bottom:.5rem}
+.tag-list{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:11px;padding:3px 9px;border-radius:100px;background:var(--bg);border:1px solid var(--border);color:var(--text-sec)}
+.cert-tag{font-size:11px;padding:3px 9px;border-radius:100px;background:var(--purple-light);border:1px solid #AFA9EC;color:var(--purple)}
+
+/* PATHS SECTION */
+.paths-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1.25rem;padding:1.25rem}
+.paths-section h2{font-size:15px;font-weight:500;margin-bottom:1rem}
+.paths-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.path-card{border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem}
+.path-label{font-size:11px;font-weight:500;font-family:'DM Mono',monospace;color:var(--text-hint);margin-bottom:.5rem;letter-spacing:.04em}
+.path-title{font-size:13px;font-weight:500;margin-bottom:.75rem}
+.path-steps{display:flex;flex-direction:column;gap:4px}
+.path-step{font-size:12px;color:var(--text-sec);display:flex;align-items:flex-start;gap:6px}
+.step-num{font-family:'DM Mono',monospace;font-size:11px;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 5px;flex-shrink:0;margin-top:1px}
+
+/* SALARY TABLE */
+.salary-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1.25rem;padding:1.25rem}
+.salary-section h2{font-size:15px;font-weight:500;margin-bottom:1rem}
+.salary-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f5f5f5}
+.salary-row:last-child{border-bottom:none}
+.salary-role{font-size:13px;flex:1}
+.salary-level{font-size:11px;color:var(--text-hint);font-family:'DM Mono',monospace;width:70px}
+.salary-bar-wrap{flex:2;height:6px;background:var(--bg);border-radius:3px;overflow:hidden}
+.salary-bar{height:6px;background:var(--green-mid);border-radius:3px}
+.salary-range{font-size:12px;color:var(--text-sec);width:120px;text-align:right;white-space:nowrap}
+
+footer{text-align:center;padding:2rem;font-size:12px;color:var(--text-hint);border-top:1px solid #eee}
+footer a{color:var(--green);text-decoration:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-brand"><span>//</span> [Your Name] Cybersecurity</a>
+  <a href="https://calendly.com/YOUR-LINK" class="nav-cta" target="_blank">Book a coaching call</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">Free career resource</div>
+  <h1>Cybersecurity career mindmap</h1>
+  <p>Every role, path, and skill in cyber — explored interactively. Click any role to see salary ranges, required skills, and recommended certifications.</p>
+  <div class="instructions">Click a role card to expand details</div>
+</div>
+
+<div class="map-wrap">
+
+<div class="filter-row">
+  <button class="filter-btn active" onclick="filterDomain('all',this)">All domains</button>
+  <button class="filter-btn" onclick="filterDomain('offensive',this)">Offensive security</button>
+  <button class="filter-btn" onclick="filterDomain('defensive',this)">Defensive / SOC</button>
+  <button class="filter-btn" onclick="filterDomain('grc',this)">GRC & compliance</button>
+  <button class="filter-btn" onclick="filterDomain('cloud',this)">Cloud & DevSecOps</button>
+  <button class="filter-btn" onclick="filterDomain('leadership',this)">Leadership</button>
+  <button class="filter-btn" onclick="filterDomain('emerging',this)">Emerging</button>
+</div>
+
+<div id="domains-container"></div>
+
+<div class="paths-section">
+  <h2>Common career paths</h2>
+  <div class="paths-grid">
+    <div class="path-card">
+      <div class="path-label">Path A — IT to security</div>
+      <div class="path-title">From sysadmin to security engineer</div>
+      <div class="path-steps">
+        <div class="path-step"><span class="step-num">1</span>CompTIA Security+ (3–6 months)</div>
+        <div class="path-step"><span class="step-num">2</span>SOC analyst role (1–2 years)</div>
+        <div class="path-step"><span class="step-num">3</span>Specialise in SIEM/SOAR or cloud</div>
+        <div class="path-step"><span class="step-num">4</span>Security engineer / senior analyst</div>
+        <div class="path-step"><span class="step-num">5</span>CISSP + team lead / architect</div>
+      </div>
+    </div>
+    <div class="path-card">
+      <div class="path-label">Path B — non-tech career changer</div>
+      <div class="path-title">From any background into GRC</div>
+      <div class="path-steps">
+        <div class="path-step"><span class="step-num">1</span>CompTIA Security+ or CISM foundations</div>
+        <div class="path-step"><span class="step-num">2</span>ISO 27001 Lead Implementer course</div>
+        <div class="path-step"><span class="step-num">3</span>Junior GRC analyst / compliance role</div>
+        <div class="path-step"><span class="step-num">4</span>CISM or CRISC certification</div>
+        <div class="path-step"><span class="step-num">5</span>GRC manager / DPO / vCISO</div>
+      </div>
+    </div>
+    <div class="path-card">
+      <div class="path-label">Path C — software dev to AppSec</div>
+      <div class="path-title">From developer to application security</div>
+      <div class="path-steps">
+        <div class="path-step"><span class="step-num">1</span>OWASP Top 10 self-study + CTFs</div>
+        <div class="path-step"><span class="step-num">2</span>eJPT or CompTIA PenTest+</div>
+        <div class="path-step"><span class="step-num">3</span>Bug bounty hunting (HackerOne / Bugcrowd)</div>
+        <div class="path-step"><span class="step-num">4</span>Junior AppSec / pen tester role</div>
+        <div class="path-step"><span class="step-num">5</span>OSCP + senior pen tester / AppSec engineer</div>
+      </div>
+    </div>
+    <div class="path-card">
+      <div class="path-label">Path D — graduate entry</div>
+      <div class="path-title">No experience to first role in 12 months</div>
+      <div class="path-steps">
+        <div class="path-step"><span class="step-num">1</span>Google Cybersecurity Certificate or TryHackMe</div>
+        <div class="path-step"><span class="step-num">2</span>CompTIA Security+ exam</div>
+        <div class="path-step"><span class="step-num">3</span>Home lab + GitHub portfolio</div>
+        <div class="path-step"><span class="step-num">4</span>Volunteer / intern at local SME</div>
+        <div class="path-step"><span class="step-num">5</span>Junior SOC analyst or helpdesk security</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="salary-section">
+  <h2>Salary ranges (global benchmarks, USD)</h2>
+  <div id="salary-table"></div>
+</div>
+
+</div>
+
+<footer>
+  &copy; 2025 <a href="#">[Your Name] Cybersecurity</a> &middot; Free resource — share freely &middot;
+  <a href="mailto:you@yourdomain.com">Get coaching support</a>
+</footer>
+
+<script>
+const domains=[
+  {id:'defensive',label:'Defensive security / SOC',color:'#185FA5',bg:'#E6F1FB',icon:'🛡',roles:[
+    {name:'SOC Analyst (L1)',level:'Entry',salary:'$45k–$70k',salaryPct:25,desc:'First line of defence — monitoring alerts, triaging events, and escalating incidents. The most accessible entry point into cyber.',skills:['SIEM tools (Splunk, QRadar)','Log analysis','Alert triage','Incident ticketing','Basic networking'],certs:['CompTIA Security+','Google Cybersecurity Certificate','BTL1']},
+    {name:'SOC Analyst (L2/L3)',level:'Mid',salary:'$70k–$110k',salaryPct:50,desc:'Deeper investigation, threat hunting, and mentoring L1 analysts. Often involves writing detection rules and handling complex incidents.',skills:['Threat hunting','Malware analysis','SOAR playbooks','Threat intelligence','Forensics basics'],certs:['CompTIA CySA+','GCIH','eJPT']},
+    {name:'Incident Responder',level:'Mid–Senior',salary:'$80k–$130k',salaryPct:58,desc:'Leads response to active breaches — containment, eradication, recovery, and post-incident reporting.',skills:['DFIR','Memory forensics','Chain of custody','Executive comms','EDR tools'],certs:['GCFE','GCIH','GCFA']},
+    {name:'Threat Intelligence Analyst',level:'Mid',salary:'$75k–$120k',salaryPct:52,desc:'Tracks threat actors, TTPs, and emerging attack trends. Produces intelligence reports to inform defensive strategy.',skills:['MITRE ATT&CK','OSINT','Threat actor profiling','IOC analysis','Report writing'],certs:['GCTI','Recorded Future certification']},
+    {name:'Security Engineer (Defensive)',level:'Senior',salary:'$110k–$160k',salaryPct:72,desc:'Builds and maintains the security tooling — SIEM, EDR, SOAR, detection pipelines. Bridges SOC operations and engineering.',skills:['Python/scripting','SIEM architecture','Detection engineering','Cloud security','API integrations'],certs:['CISSP','GCED','AWS Security Specialty']},
+  ]},
+  {id:'offensive',label:'Offensive security & pen testing',color:'#993C1D',bg:'#FAECE7',icon:'⚔',roles:[
+    {name:'Junior Penetration Tester',level:'Entry–Mid',salary:'$55k–$90k',salaryPct:35,desc:'Performs guided assessments of web apps, networks, and infrastructure under supervision. Writes findings reports.',skills:['Kali Linux','Burp Suite','Nmap','Metasploit','Report writing'],certs:['CompTIA PenTest+','eJPT','CEH']},
+    {name:'Penetration Tester',level:'Mid',salary:'$85k–$140k',salaryPct:62,desc:'Independent assessments across web, internal network, and cloud environments. Client-facing and commercially aware.',skills:['Web app testing (OWASP)','Active Directory attacks','Cloud pen testing','Custom exploits','Client comms'],certs:['OSCP','PNPT','GPEN']},
+    {name:'Red Team Operator',level:'Senior',salary:'$110k–$180k',salaryPct:78,desc:'Simulates advanced persistent threats against mature organisations — long-duration engagements, custom tooling, and stealth.',skills:['C2 frameworks','Custom malware dev','Physical intrusion','Social engineering','OPSEC'],certs:['OSCP','CRTO','OSED']},
+    {name:'Bug Bounty Hunter',level:'Any',salary:'Variable $0–$500k+',salaryPct:60,desc:'Independent researcher finding and reporting vulnerabilities on platforms like HackerOne and Bugcrowd. Can be part-time or full-time.',skills:['Web vulnerabilities','API testing','OWASP Top 10','Reconnaissance','Proof of concept writing'],certs:['OSCP','BSCP (PortSwigger)']},
+    {name:'AppSec Engineer',level:'Mid–Senior',salary:'$100k–$160k',salaryPct:70,desc:'Embeds security into the software development lifecycle — threat modelling, code review, SAST/DAST, and developer training.',skills:['Secure code review','SAST/DAST tools','Threat modelling','DevSecOps','CI/CD pipelines'],certs:['GWEB','CSSLP','OSCP']},
+  ]},
+  {id:'grc',label:'GRC, compliance & risk',color:'#534AB7',bg:'#EEEDFE',icon:'📋',roles:[
+    {name:'GRC Analyst',level:'Entry–Mid',salary:'$55k–$90k',salaryPct:35,desc:'Supports governance, risk, and compliance programmes. Maintains control frameworks, conducts risk assessments, and prepares audit evidence.',skills:['ISO 27001','Risk registers','Policy writing','Audit support','Gap analysis'],certs:['CompTIA Security+','ISO 27001 Lead Implementer','CISM']},
+    {name:'Compliance Manager',level:'Mid–Senior',salary:'$85k–$130k',salaryPct:60,desc:'Owns the compliance programme across one or more frameworks. Manages audits, liaises with regulators, and drives remediation.',skills:['GDPR','PCI DSS','SOC 2','Internal audit','Regulatory liaison'],certs:['CISM','CRISC','CDPSE']},
+    {name:'Data Protection Officer (DPO)',level:'Senior',salary:'$90k–$140k',salaryPct:65,desc:'Legally required role under GDPR for many organisations. Advises on data protection obligations, handles DSARs, and interfaces with the ICO/supervisory authority.',skills:['GDPR/UK GDPR','DPIA','Data mapping','Breach notification','Privacy by design'],certs:['CIPM','CIPP/E','BCS DPC']},
+    {name:'Risk Manager',level:'Mid–Senior',salary:'$80k–$130k',salaryPct:58,desc:'Identifies, quantifies, and manages cyber and operational risk. Produces risk reports for board and executive audiences.',skills:['Risk quantification (FAIR)','Risk registers','Board reporting','Business continuity','Insurance liaison'],certs:['CRISC','CGEIT','ISO 31000']},
+    {name:'vCISO / Fractional CISO',level:'Senior',salary:'$130k–$300k+',salaryPct:88,desc:'Provides CISO-level strategic leadership to organisations that cannot justify a full-time hire. High autonomy, consultancy-based.',skills:['Security strategy','Board communication','Programme leadership','Commercial awareness','All domains'],certs:['CISSP','CISM','MBA or equivalent']},
+  ]},
+  {id:'cloud',label:'Cloud security & DevSecOps',color:'#085041',bg:'#E1F5EE',icon:'☁',roles:[
+    {name:'Cloud Security Analyst',level:'Entry–Mid',salary:'$75k–$115k',salaryPct:52,desc:'Monitors and secures cloud environments (AWS, Azure, GCP) — misconfiguration detection, IAM review, and alert response.',skills:['AWS/Azure/GCP fundamentals','IAM policies','Cloud SIEM','CSPM tools','Terraform basics'],certs:['AWS Security Specialty','AZ-500','CompTIA Cloud+']},
+    {name:'Cloud Security Engineer',level:'Mid–Senior',salary:'$110k–$170k',salaryPct:75,desc:'Architects and implements secure cloud infrastructure — zero-trust, CSPM, network security groups, secrets management.',skills:['IaC (Terraform, CDK)','Zero-trust architecture','Container security','Secrets management','CI/CD security'],certs:['AWS Security Specialty','CCSP','GCP Professional Security Engineer']},
+    {name:'DevSecOps Engineer',level:'Mid–Senior',salary:'$105k–$165k',salaryPct:73,desc:'Integrates security into CI/CD pipelines — SAST, DAST, SCA, container scanning, and supply chain security.',skills:['GitHub Actions / Jenkins','SAST/DAST integration','Container security (Docker, K8s)','SBOM','Secrets scanning'],certs:['CKS (Kubernetes Security)','GWEB','AWS DevOps Professional']},
+    {name:'Container & Kubernetes Security',level:'Senior',salary:'$115k–$175k',salaryPct:77,desc:'Specialised role securing containerised workloads — runtime security, network policies, image scanning, and cluster hardening.',skills:['Kubernetes RBAC','Falco / Aqua Security','OPA/Gatekeeper','Service mesh security','eBPF'],certs:['CKS','KCSA','CompTIA Cloud+']},
+  ]},
+  {id:'leadership',label:'Leadership & strategy',color:'#854F0B',bg:'#FAEEDA',icon:'🏛',roles:[
+    {name:'Security Team Lead',level:'Mid–Senior',salary:'$100k–$150k',salaryPct:68,desc:'Manages a small security team — people leadership combined with technical contribution. Bridge between ops and management.',skills:['People management','Performance reviews','Project management','Stakeholder comms','Mentoring'],certs:['CISSP','CISM','PMP']},
+    {name:'CISO',level:'Executive',salary:'$150k–$400k+',salaryPct:95,desc:'Chief Information Security Officer — board-level role owning the entire security programme, budget, and strategic direction.',skills:['Business strategy','Board presentation','Risk appetite','Budget management','Regulatory engagement'],certs:['CISSP','CISM','Executive MBA']},
+    {name:'Security Architect',level:'Senior',salary:'$120k–$190k',salaryPct:82,desc:'Designs enterprise security architecture — zero-trust frameworks, reference architectures, and technology selection.',skills:['Enterprise architecture','Zero-trust design','SABSA / TOGAF','Cloud architecture','Vendor evaluation'],certs:['CISSP-ISSAP','SABSA','CCSP']},
+  ]},
+  {id:'emerging',label:'Emerging & specialist',color:'#3C3489',bg:'#EEEDFE',icon:'✦',roles:[
+    {name:'AI Security Specialist',level:'Mid–Senior',salary:'$100k–$170k',salaryPct:73,desc:'Secures AI/ML systems — adversarial attacks, model poisoning, prompt injection, and AI governance frameworks.',skills:['LLM security','OWASP LLM Top 10','MLOps security','AI governance','Red teaming AI'],certs:['CISSP','Emerging AI security credentials']},
+    {name:'OT / ICS Security',level:'Mid–Senior',salary:'$95k–$155k',salaryPct:68,desc:'Secures operational technology — industrial control systems, SCADA, and critical infrastructure. High demand, niche skills.',skills:['ICS/SCADA protocols','Purdue model','OT network segmentation','IEC 62443','Safety systems'],certs:['GICSP','CSSA','IEC 62443 Associate']},
+    {name:'Cyber Threat Intelligence Lead',level:'Senior',salary:'$100k–$155k',salaryPct:70,desc:'Leads a CTI function — strategic intelligence, nation-state tracking, and threat briefings for C-suite and board.',skills:['All-source intelligence','STIX/TAXII','Attribution','Intelligence cycle','Executive briefing'],certs:['GCTI','CCTIA']},
+    {name:'Security Awareness Manager',level:'Mid',salary:'$70k–$110k',salaryPct:48,desc:'Designs and runs the human firewall — phishing simulations, training programmes, culture change, and metrics.',skills:['Learning design','Phishing platforms (KnowBe4)','Metrics & reporting','Behaviour change','Communication'],certs:['SSAP','CompTIA Security+','CISM']},
+  ]},
+];
+
+const salaryData=[
+  {role:'CISO',level:'Executive',range:'$150k–$400k+',pct:95},
+  {role:'Security Architect',level:'Senior',range:'$120k–$190k',pct:82},
+  {role:'Red Team Operator',level:'Senior',range:'$110k–$180k',pct:78},
+  {role:'Cloud Security Engineer',level:'Mid–Senior',range:'$110k–$170k',pct:75},
+  {role:'AI Security Specialist',level:'Mid–Senior',range:'$100k–$170k',pct:73},
+  {role:'DevSecOps Engineer',level:'Mid–Senior',range:'$105k–$165k',pct:73},
+  {role:'AppSec Engineer',level:'Mid–Senior',range:'$100k–$160k',pct:70},
+  {role:'Penetration Tester',level:'Mid',range:'$85k–$140k',pct:62},
+  {role:'Compliance Manager',level:'Mid–Senior',range:'$85k–$130k',pct:60},
+  {role:'Cloud Security Analyst',level:'Entry–Mid',range:'$75k–$115k',pct:52},
+  {role:'Threat Intelligence Analyst',level:'Mid',range:'$75k–$120k',pct:52},
+  {role:'SOC Analyst L2/L3',level:'Mid',range:'$70k–$110k',pct:50},
+  {role:'GRC Analyst',level:'Entry–Mid',range:'$55k–$90k',pct:35},
+  {role:'Junior Pen Tester',level:'Entry–Mid',range:'$55k–$90k',pct:35},
+  {role:'SOC Analyst L1',level:'Entry',range:'$45k–$70k',pct:25},
+];
+
+let activeFilter='all';
+let activeRole=null;
+
+function filterDomain(id,btn){
+  activeFilter=id;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDomains();
+}
+
+function renderDomains(){
+  const container=document.getElementById('domains-container');
+  container.innerHTML='';
+  const toShow=activeFilter==='all'?domains:domains.filter(d=>d.id===activeFilter);
+  toShow.forEach(domain=>{
+    const div=document.createElement('div');
+    div.className='domain';
+    div.innerHTML=`
+      <div class="domain-header" onclick="toggleDomain(this.parentElement,'${domain.id}')">
+        <div class="domain-icon" style="background:${domain.bg};color:${domain.color}">${domain.icon}</div>
+        <span class="domain-title">${domain.label}</span>
+        <span class="domain-count">${domain.roles.length} roles</span>
+        <svg class="domain-chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="domain-body">
+        <div class="roles-grid">${domain.roles.map((r,i)=>`
+          <div class="role-card" onclick="showRole('${domain.id}',${i},this)">
+            <div class="role-name">${r.name}</div>
+            <div class="role-level">${r.level} · ${r.salary}</div>
+          </div>`).join('')}
+        </div>
+        <div id="detail-${domain.id}" class="role-detail"></div>
+      </div>`;
+    if(activeFilter!=='all')div.classList.add('open');
+    container.appendChild(div);
+  });
+}
+
+function toggleDomain(el,id){
+  el.classList.toggle('open');
+}
+
+function showRole(domainId,roleIdx,card){
+  const domain=domains.find(d=>d.id===domainId);
+  const role=domain.roles[roleIdx];
+  const detailEl=document.getElementById('detail-'+domainId);
+  document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('active'));
+  if(activeRole===domainId+roleIdx&&detailEl.classList.contains('show')){
+    detailEl.classList.remove('show');activeRole=null;return;
+  }
+  card.classList.add('active');activeRole=domainId+roleIdx;
+  detailEl.innerHTML=`
+    <div class="rd-header">
+      <div class="rd-title">${role.name}</div>
+      <div class="salary-pill">${role.salary}</div>
+    </div>
+    <p class="rd-desc">${role.desc}</p>
+    <div class="rd-cols">
+      <div>
+        <div class="rd-section-title">Key skills</div>
+        <div class="tag-list">${role.skills.map(s=>`<span class="tag">${s}</span>`).join('')}</div>
+      </div>
+      <div>
+        <div class="rd-section-title">Recommended certs</div>
+        <div class="tag-list">${role.certs.map(c=>`<span class="cert-tag">${c}</span>`).join('')}</div>
+      </div>
+    </div>`;
+  detailEl.classList.add('show');
+  setTimeout(()=>detailEl.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+}
+
+function renderSalary(){
+  const el=document.getElementById('salary-table');
+  el.innerHTML=salaryData.map(s=>`
+    <div class="salary-row">
+      <div class="salary-role">${s.role}</div>
+      <div class="salary-level">${s.level}</div>
+      <div class="salary-bar-wrap"><div class="salary-bar" style="width:${s.pct}%"></div></div>
+      <div class="salary-range">${s.range}</div>
+    </div>`).join('');
+}
+
+renderDomains();
+renderSalary();
+</script>
+</body>
+</html>

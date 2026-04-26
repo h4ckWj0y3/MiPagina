@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISO 42001:2023 AI Management System Readiness Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@400;500&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#3D2080;--purple-mid:#6D52C8;--purple-pale:#EEE9FF;--purple-border:#C4B5FD;
+  --ink:#0D0D0D;--ink2:#3A3A3A;--ink3:#777;
+  --line:#E5E5E5;--bg:#F8F7FD;--surface:#FFFFFF;--surface2:#F3F0FF;
+  --green:#0B5E48;--green-mid:#16A676;--green-pale:#E2F4EE;
+  --amber:#7A3F00;--amber-mid:#BA7517;--amber-pale:#FDF0E0;
+  --red:#8B1A1A;--red-pale:#FBE9E9;
+  --r:10px;--r-sm:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+nav{background:var(--surface);border-bottom:1px solid var(--line);padding:0 2rem;height:58px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;text-decoration:none;color:var(--ink)}
+.logo em{color:var(--purple-mid);font-style:normal}
+.nav-btn{font-size:12px;padding:7px 18px;border-radius:100px;background:var(--purple);color:#fff;text-decoration:none;font-weight:500;transition:opacity .15s}
+.nav-btn:hover{opacity:.85}
+
+.page{max-width:900px;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+.page-tag{display:inline-block;background:var(--purple-pale);color:var(--purple-mid);font-size:11px;font-weight:500;padding:4px 12px;border-radius:100px;font-family:'DM Mono',monospace;margin-bottom:1rem}
+h1{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,36px);font-weight:700;margin-bottom:.5rem;line-height:1.2}
+.page-desc{font-size:15px;color:var(--ink2);line-height:1.7;max-width:640px;margin-bottom:.5rem}
+.context-note{font-size:13px;color:var(--ink3);background:var(--purple-pale);border:1px solid var(--purple-border);border-radius:var(--r-sm);padding:10px 14px;display:inline-block;margin-bottom:2rem}
+
+/* DASHBOARD */
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.5rem}
+.dash-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:.875rem;text-align:center}
+.dash-num{font-size:26px;font-weight:500;font-family:'DM Mono',monospace;margin-bottom:2px}
+.dash-label{font-size:11px;color:var(--ink3)}
+.overall{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:.875rem;margin-bottom:2rem}
+.bar-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:.5rem}
+.bar-track{height:8px;background:var(--bg);border-radius:4px;overflow:hidden}
+.bar-fill{height:8px;border-radius:4px;transition:width .5s;background:var(--purple-mid)}
+
+/* FILTER */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center}
+.filter-row .flabel{font-size:12px;color:var(--ink3)}
+.fbtn{font-size:12px;padding:5px 12px;border-radius:100px;border:1px solid var(--line);background:var(--surface);color:var(--ink3);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.fbtn.on,.fbtn:hover{border-color:var(--purple-mid);color:var(--purple);background:var(--purple-pale)}
+.reset{font-size:12px;padding:5px 12px;border-radius:100px;border:1px solid var(--red-pale);background:var(--surface);color:var(--red);cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:auto}
+
+/* CLAUSES */
+.clause{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);margin-bottom:1rem;overflow:hidden}
+.clause-hdr{display:flex;align-items:center;gap:12px;padding:.875rem 1.25rem;cursor:pointer;user-select:none;transition:background .15s}
+.clause-hdr:hover{background:var(--surface2)}
+.clause-num{font-size:12px;font-weight:600;font-family:'DM Mono',monospace;color:var(--purple-mid);width:40px;flex-shrink:0}
+.clause-title{font-size:14px;font-weight:500;flex:1}
+.clause-stats{display:flex;align-items:center;gap:8px}
+.mini-track{width:56px;height:4px;background:var(--bg);border-radius:2px;overflow:hidden}
+.mini-fill{height:4px;border-radius:2px;background:var(--purple-mid);transition:width .4s}
+.clause-count{font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3);width:44px;text-align:right}
+.chevron{width:16px;height:16px;transition:transform .2s;color:var(--ink3);flex-shrink:0}
+.clause.open .chevron{transform:rotate(180deg)}
+.clause-body{display:none;border-top:1px solid #F5F5F5}
+.clause.open .clause-body{display:block}
+.clause-intro{font-size:13px;color:var(--ink3);padding:.75rem 1.25rem;background:var(--bg);border-bottom:1px solid var(--line);line-height:1.6}
+
+/* CONTROLS */
+.ctrl{padding:.75rem 1.25rem;border-bottom:1px solid #FAFAFA;transition:background .1s}
+.ctrl:last-child{border-bottom:none}
+.ctrl:hover{background:#FEFEFE}
+.ctrl-row{display:flex;align-items:flex-start;gap:12px}
+.ctrl-id{font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3);width:48px;flex-shrink:0;padding-top:2px}
+.ctrl-content{flex:1}
+.ctrl-name{font-size:13px;font-weight:500;margin-bottom:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ctrl-desc{font-size:12px;color:var(--ink3);line-height:1.55}
+.priority-tag{font-size:10px;padding:2px 7px;border-radius:100px;font-weight:500}
+.p-high{background:var(--red-pale);color:var(--red)}
+.p-med{background:var(--amber-pale);color:var(--amber)}
+.ctrl-btns{display:flex;gap:5px;flex-shrink:0;margin-top:1px}
+.sbtn{width:28px;height:28px;border-radius:6px;border:1px solid var(--line);background:var(--surface);cursor:pointer;display:grid;place-items:center;font-size:12px;transition:all .15s;color:var(--ink3)}
+.sbtn.done{background:var(--green-pale);border-color:var(--green-mid);color:var(--green)}
+.sbtn.partial{background:var(--amber-pale);border-color:var(--amber-mid);color:var(--amber)}
+.sbtn.gap{background:var(--red-pale);border-color:#E24B4A;color:var(--red)}
+
+/* CTA */
+.cta{background:linear-gradient(135deg,var(--purple) 0%,#1E1060 100%);color:#fff;border-radius:var(--r);padding:1.75rem;margin-top:2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.cta h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:.25rem}
+.cta p{font-size:13px;opacity:.85;line-height:1.6}
+.cta a{display:inline-block;background:#fff;color:var(--purple);text-decoration:none;padding:10px 22px;border-radius:100px;font-size:13px;font-weight:600;white-space:nowrap;transition:opacity .15s}
+.cta a:hover{opacity:.9}
+
+footer{text-align:center;padding:2rem;font-size:11px;color:var(--ink3);border-top:1px solid var(--line);margin-top:2rem}
+footer a{color:var(--purple-mid);text-decoration:none}
+</style>
+</head>
+<body>
+<nav>
+  <a href="#" class="logo">// <em>Your Name</em> Cybersecurity</a>
+  <a href="https://calendly.com/YOUR-LINK" class="nav-btn" target="_blank">Book ISO 42001 scoping call</a>
+</nav>
+
+<div class="page">
+  <div class="page-tag">Free resource — ISO 42001:2023</div>
+  <h1>ISO 42001 AI Management System<br>Readiness Checklist</h1>
+  <p class="page-desc">Self-assess your organisation's AI governance maturity against the world's first certifiable AI management standard. Mark each control and track your readiness score.</p>
+  <div class="context-note">📌 ISO 42001 was published in December 2023. It is the AI equivalent of ISO 27001 — structured around Plan-Do-Check-Act and designed for certification audit.</div>
+
+  <div class="dashboard">
+    <div class="dash-card"><div class="dash-num" id="d-done" style="color:var(--green-mid)">0</div><div class="dash-label">Controls done</div></div>
+    <div class="dash-card"><div class="dash-num" id="d-partial" style="color:var(--amber-mid)">0</div><div class="dash-label">Partial</div></div>
+    <div class="dash-card"><div class="dash-num" id="d-gap" style="color:var(--red)">0</div><div class="dash-label">Gaps</div></div>
+    <div class="dash-card"><div class="dash-num" id="d-pct">0%</div><div class="dash-label">Readiness score</div></div>
+  </div>
+  <div class="overall">
+    <div class="bar-meta"><span>AI governance readiness</span><span id="bar-label">0 of 38 controls assessed</span></div>
+    <div class="bar-track"><div class="bar-fill" id="bar-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="filter-row">
+    <span class="flabel">Show:</span>
+    <button class="fbtn on" onclick="setFilter('all',this)">All</button>
+    <button class="fbtn" onclick="setFilter('gap',this)">Gaps only</button>
+    <button class="fbtn" onclick="setFilter('partial',this)">Partial</button>
+    <button class="fbtn" onclick="setFilter('done',this)">Done</button>
+    <button class="fbtn" onclick="setFilter('unset',this)">Not assessed</button>
+    <button class="reset" onclick="resetAll()">Reset all</button>
+  </div>
+
+  <div id="container"></div>
+
+  <div class="cta">
+    <div style="flex:1">
+      <h3>Ready for ISO 42001 certification?</h3>
+      <p>A structured gap analysis will identify your exact readiness level, prioritise the gaps by effort and risk, and give you a roadmap to certification — typically achievable in 4–10 months.</p>
+    </div>
+    <a href="https://calendly.com/YOUR-LINK" target="_blank">Book a free scoping call</a>
+  </div>
+</div>
+
+<footer>© 2025 <a href="#">Your Name Cybersecurity</a> · ISO 42001:2023 · <a href="mailto:you@yourdomain.com">Get expert support</a></footer>
+
+<script>
+const clauses=[
+  {num:'4',title:'Context of the organisation',intro:'Understand internal and external factors shaping AI risk, define scope of the AI management system, and identify interested parties and their requirements.',controls:[
+    {id:'4.1',name:'Understanding the organisation and its context',desc:'Determine external and internal issues relevant to the purpose and strategic direction that affect the ability to achieve intended outcomes of the AIMS.',priority:'high'},
+    {id:'4.2',name:'Understanding the needs and expectations of interested parties',desc:'Determine interested parties relevant to the AIMS and their requirements related to AI systems.',priority:'high'},
+    {id:'4.3',name:'Determining the scope of the AIMS',desc:'Determine the boundaries and applicability of the AIMS including AI systems in scope, their purposes, and context of use.',priority:'high'},
+    {id:'4.4',name:'AI management system',desc:'Establish, implement, maintain, and continually improve the AIMS in accordance with the requirements of ISO 42001.',priority:'high'},
+  ]},
+  {num:'5',title:'Leadership',intro:'Top management must demonstrate commitment to the AIMS, establish AI policy, and assign roles and responsibilities for AI governance.',controls:[
+    {id:'5.1',name:'Leadership and commitment',desc:'Top management demonstrates leadership and commitment to the AIMS — including ensuring AI policy is established, resources available, and the AIMS achieving intended outcomes.',priority:'high'},
+    {id:'5.2',name:'AI policy',desc:'Top management establishes an AI policy appropriate to the purpose of the organisation, providing a framework for setting AI objectives.',priority:'high'},
+    {id:'5.3',name:'Organisational roles, responsibilities and authorities',desc:'Roles and responsibilities for AI governance assigned, communicated, and understood. AI Risk Owner and AI Ethics roles defined.',priority:'high'},
+  ]},
+  {num:'6',title:'Planning',intro:'Risk and opportunity management for AI systems, including setting measurable AI objectives and planning how to achieve them.',controls:[
+    {id:'6.1',name:'Actions to address risks and opportunities',desc:'Determine risks and opportunities related to the AIMS context and AI systems. Plan actions to address these risks and integrate into AIMS processes.',priority:'high'},
+    {id:'6.1.2',name:'AI risk assessment',desc:'Define and apply an AI risk assessment process — including criteria for acceptable risk, methodology, and documentation of results.',priority:'high'},
+    {id:'6.1.3',name:'AI risk treatment',desc:'Select appropriate risk treatment options, determine controls needed, and produce a Statement of Applicability for AI controls.',priority:'high'},
+    {id:'6.2',name:'AI objectives and planning to achieve them',desc:'Establish measurable AI objectives consistent with the AI policy. Plan what will be done, resources required, timelines, and how results will be evaluated.',priority:'med'},
+    {id:'6.3',name:'Planning of changes',desc:'Determine need for changes to the AIMS. Carry out changes in a planned manner.',priority:''},
+  ]},
+  {num:'7',title:'Support',intro:'Resources, competence, awareness, communication, and documented information required to operate the AIMS.',controls:[
+    {id:'7.1',name:'Resources',desc:'Determine and provide resources needed to establish, implement, maintain, and improve the AIMS — including human resources with AI expertise.',priority:'high'},
+    {id:'7.2',name:'Competence',desc:'Determine necessary competence for AI roles. Ensure competence through education, training, or experience. Retain documented evidence.',priority:'high'},
+    {id:'7.3',name:'Awareness',desc:'Ensure persons doing work under the organisation\'s control are aware of the AI policy, their contribution to AIMS effectiveness, and implications of non-conformity.',priority:'med'},
+    {id:'7.4',name:'Communication',desc:'Determine internal and external communication needs relevant to the AIMS — what, when, with whom, how.',priority:'med'},
+    {id:'7.5',name:'Documented information',desc:'AIMS includes documented information required by the standard and determined as necessary for effectiveness. Controls for creation, updating, and control of documented information.',priority:'high'},
+  ]},
+  {num:'8',title:'Operation',intro:'Operational planning, AI system impact assessment, AI supply chain management, and controls for responsible AI development and deployment.',controls:[
+    {id:'8.1',name:'Operational planning and control',desc:'Plan, implement, control, and maintain processes needed to meet AI requirements and implement risk treatment actions.',priority:'high'},
+    {id:'8.2',name:'AI system impact assessment',desc:'Conduct impact assessments for AI systems — assessing potential impacts on individuals, groups, and society. Document and retain results.',priority:'high'},
+    {id:'8.3',name:'AI system lifecycle',desc:'Manage AI systems across their full lifecycle — from conception through development, deployment, operation, and decommissioning.',priority:'high'},
+    {id:'8.4',name:'AI system documentation',desc:'Maintain documentation for AI systems including purpose, intended use, training data, model architecture, performance metrics, and known limitations.',priority:'high'},
+    {id:'8.5',name:'Data management for AI',desc:'Implement data management processes — data quality, data governance, data lineage, and controls for training and operational data.',priority:'high'},
+    {id:'8.6',name:'AI system verification and validation',desc:'Define and conduct verification and validation of AI systems prior to deployment. Include testing for performance, fairness, robustness, and safety.',priority:'high'},
+    {id:'8.7',name:'Human oversight and intervention',desc:'Implement appropriate human oversight mechanisms for AI systems — particularly for high-risk or consequential decisions.',priority:'high'},
+    {id:'8.8',name:'AI supply chain management',desc:'Manage risks arising from AI supply chain — including third-party models, datasets, tools, and APIs. Conduct supplier due diligence.',priority:'high'},
+  ]},
+  {num:'9',title:'Performance evaluation',intro:'Monitoring, measurement, internal audit, and management review to evaluate AIMS effectiveness.',controls:[
+    {id:'9.1',name:'Monitoring, measurement, analysis and evaluation',desc:'Determine what needs monitoring and measurement for AI performance and AIMS effectiveness. Define methods, frequency, and who analyses results.',priority:'high'},
+    {id:'9.2',name:'Internal audit',desc:'Conduct internal audits of the AIMS at planned intervals to confirm it conforms to requirements and is effectively implemented.',priority:'high'},
+    {id:'9.3',name:'Management review',desc:'Top management reviews the AIMS at planned intervals to ensure continued suitability, adequacy, and effectiveness. Review inputs and outputs documented.',priority:'high'},
+  ]},
+  {num:'10',title:'Improvement',intro:'Address nonconformities, implement corrective actions, and continually improve the AIMS.',controls:[
+    {id:'10.1',name:'Continual improvement',desc:'Continually improve the suitability, adequacy, and effectiveness of the AIMS.',priority:'med'},
+    {id:'10.2',name:'Nonconformity and corrective action',desc:'React to nonconformities — take action, review effectiveness, update risks and objectives as necessary. Retain documented evidence.',priority:'high'},
+  ]},
+  {num:'A',title:'Annex A — AI-specific controls',intro:'36 AI-specific controls across 9 control categories covering responsible AI objectives, human oversight, transparency, fairness, privacy, safety, and accountability.',controls:[
+    {id:'A.2.2',name:'AI policy for responsible use',desc:'Implement specific policies governing responsible development and use of AI — covering prohibited uses, acceptable use, and ethical principles.',priority:'high'},
+    {id:'A.3.2',name:'AI roles and responsibilities',desc:'Define and assign roles specifically for AI governance — AI product owners, data scientists, ethics reviewers, and model risk owners.',priority:'high'},
+    {id:'A.4.2',name:'Resources for responsible AI',desc:'Ensure adequate budget, tools, and expertise specifically for AI responsibility functions — not just AI development.',priority:'med'},
+    {id:'A.5.2',name:'Objectives for responsible AI systems',desc:'Establish measurable objectives for AI system responsibility — including fairness metrics, accuracy thresholds, and bias monitoring targets.',priority:'med'},
+    {id:'A.6.1',name:'Understanding AI-related context',desc:'Understand the specific context in which each AI system operates — including regulatory environment, affected stakeholders, and societal impact.',priority:'high'},
+    {id:'A.6.2',name:'AI system impact assessment process',desc:'Implement a repeatable process for conducting AI impact assessments before deploying new or modified AI systems.',priority:'high'},
+    {id:'A.7.2',name:'Processes for AI systems across lifecycle',desc:'Implement structured processes covering the complete AI lifecycle — data acquisition, model development, testing, deployment, monitoring, and decommissioning.',priority:'high'},
+    {id:'A.7.3',name:'Data for AI systems',desc:'Implement controls for AI training and operational data — quality checks, bias detection, provenance tracking, and data minimisation.',priority:'high'},
+    {id:'A.7.4',name:'Feedback mechanisms',desc:'Implement mechanisms to collect and act on feedback about AI system performance — including user complaints, adverse outcomes, and model drift.',priority:'med'},
+    {id:'A.7.5',name:'Record keeping for AI systems',desc:'Maintain records sufficient to demonstrate AI system behaviour, decisions, and compliance with governance policies.',priority:'high'},
+    {id:'A.8.2',name:'Allocation of responsibilities for AI',desc:'Clearly allocate responsibilities for each AI system across its lifecycle — who owns the model, who monitors outputs, who can authorise changes.',priority:'high'},
+    {id:'A.8.3',name:'AI system risk management',desc:'Implement risk management specific to AI systems — covering model risk, data risk, operational risk, and reputational risk.',priority:'high'},
+    {id:'A.8.4',name:'Documentation of AI systems',desc:'Maintain technical documentation for each AI system including architecture, training data sources, performance benchmarks, and limitations.',priority:'high'},
+    {id:'A.9.3',name:'Verification and validation of AI systems',desc:'Conduct systematic testing of AI systems before and after deployment — including adversarial testing, bias evaluation, and performance benchmarking.',priority:'high'},
+    {id:'A.9.4',name:'Measures against unintended outcomes',desc:'Implement safeguards against unintended AI outputs — including output filtering, confidence thresholds, human review triggers, and kill switches.',priority:'high'},
+    {id:'A.10.2',name:'Third-party and open-source AI',desc:'Apply due diligence to third-party and open-source AI components — evaluate provenance, licence terms, safety record, and security practices.',priority:'high'},
+  ]},
+];
+
+const TOTAL=clauses.reduce((s,c)=>s+c.controls.length,0);
+let states={};
+let curFilter='all';
+
+function load(){try{const s=localStorage.getItem('iso42001');if(s)states=JSON.parse(s);}catch(e){}}
+function save(){try{localStorage.setItem('iso42001',JSON.stringify(states));}catch(e){}}
+
+function update(){
+  let done=0,partial=0,gap=0;
+  Object.values(states).forEach(v=>{if(v==='done')done++;else if(v==='partial')partial++;else if(v==='gap')gap++;});
+  const pct=Math.round((done+partial*.5)/TOTAL*100);
+  const assessed=done+partial+gap;
+  document.getElementById('d-done').textContent=done;
+  document.getElementById('d-partial').textContent=partial;
+  document.getElementById('d-gap').textContent=gap;
+  document.getElementById('d-pct').textContent=pct+'%';
+  document.getElementById('bar-fill').style.width=pct+'%';
+  document.getElementById('bar-label').textContent=assessed+' of '+TOTAL+' controls assessed';
+  clauses.forEach(c=>{
+    const d=c.controls.filter(r=>states[r.id]==='done').length;
+    const p=c.controls.filter(r=>states[r.id]==='partial').length;
+    const s=Math.round((d+p*.5)/c.controls.length*100);
+    const mf=document.getElementById('mf-'+c.num);
+    const mc=document.getElementById('mc-'+c.num);
+    if(mf)mf.style.width=s+'%';
+    if(mc)mc.textContent=d+'/'+c.controls.length;
+  });
+  if(curFilter!=='all')applyFilter();
+}
+
+function setFilter(f,btn){
+  curFilter=f;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  applyFilter();
+}
+
+function applyFilter(){
+  document.querySelectorAll('.ctrl').forEach(el=>{
+    const st=states[el.dataset.id]||'unset';
+    el.style.display=curFilter==='all'||st===curFilter?'':'none';
+  });
+}
+
+function resetAll(){
+  if(!confirm('Reset all?'))return;
+  states={};save();
+  document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('done','partial','gap'));
+  update();
+}
+
+function toggle(id,val,btn){
+  const cur=states[id]||'unset';
+  const next=cur===val?'unset':val;
+  states[id]=next;save();
+  btn.closest('.ctrl').querySelectorAll('.sbtn').forEach(b=>{
+    b.classList.remove('done','partial','gap');
+    if(next!=='unset'&&b.dataset.v===next)b.classList.add(next);
+  });
+  update();
+}
+
+function render(){
+  const c=document.getElementById('container');
+  c.innerHTML='';
+  clauses.forEach(clause=>{
+    const d=document.createElement('div');
+    d.className='clause';
+    d.innerHTML=`
+      <div class="clause-hdr" onclick="this.parentElement.classList.toggle('open')">
+        <span class="clause-num">${clause.num}</span>
+        <span class="clause-title">${clause.title}</span>
+        <div class="clause-stats">
+          <div class="mini-track"><div class="mini-fill" id="mf-${clause.num}" style="width:0%"></div></div>
+          <span class="clause-count" id="mc-${clause.num}">0/${clause.controls.length}</span>
+        </div>
+        <svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="clause-body">
+        <div class="clause-intro">${clause.intro}</div>
+        ${clause.controls.map(ctrl=>`
+          <div class="ctrl" data-id="${ctrl.id}">
+            <div class="ctrl-row">
+              <div class="ctrl-id">${ctrl.id}</div>
+              <div class="ctrl-content">
+                <div class="ctrl-name">${ctrl.name}${ctrl.priority==='high'?'<span class="priority-tag p-high">Priority</span>':ctrl.priority==='med'?'<span class="priority-tag p-med">Important</span>':''}</div>
+                <div class="ctrl-desc">${ctrl.desc}</div>
+              </div>
+              <div class="ctrl-btns">
+                <button class="sbtn" title="Done" data-v="done" onclick="toggle('${ctrl.id}','done',this)">✓</button>
+                <button class="sbtn" title="Partial" data-v="partial" onclick="toggle('${ctrl.id}','partial',this)">~</button>
+                <button class="sbtn" title="Gap" data-v="gap" onclick="toggle('${ctrl.id}','gap',this)">✗</button>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>`;
+    c.appendChild(d);
+  });
+  restoreStates();
+}
+
+function restoreStates(){
+  Object.entries(states).forEach(([id,val])=>{
+    document.querySelectorAll(`.sbtn[data-v]`).forEach(btn=>{
+      if(btn.closest('.ctrl')&&btn.closest('.ctrl').dataset.id===id){
+        btn.classList.remove('done','partial','gap');
+        if(val!=='unset'&&btn.dataset.v===val)btn.classList.add(val);
+      }
+    });
+  });
+  update();
+}
+
+load();render();
+</script>
+</body>
+</html>
