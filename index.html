@@ -373,7 +373,119 @@ h2.section-h2 {
 /* ============================================================
    TRUST BAR
 ============================================================ */
-.trust-bar {
+   *{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0B0D;padding:4rem 0}
+
+.trust-bar{
+  background:#0D0F12;
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  overflow:hidden;
+  position:relative;
+}
+.trust-bar::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 40% 200% at 25% 50%, rgba(22,166,118,.04) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 200% at 75% 50%, rgba(139,92,246,.04) 0%, transparent 70%);
+  pointer-events:none;
+  z-index:0;
+}
+.track-wrap{
+  display:flex;
+  overflow:hidden;
+  padding:11px 0;
+  position:relative;
+  z-index:1;
+}
+.track-wrap::before,
+.track-wrap::after{
+  content:'';
+  position:absolute;
+  top:0;bottom:0;width:120px;
+  z-index:2;pointer-events:none;
+}
+.track-wrap::before{left:0; background:linear-gradient(90deg,#0D0F12,transparent)}
+.track-wrap::after {right:0;background:linear-gradient(270deg,#0D0F12,transparent)}
+
+.track-row{
+  display:flex;
+  gap:8px;
+  white-space:nowrap;
+  flex-shrink:0;
+  will-change:transform;
+}
+.go-left { animation:go-left  34s linear infinite; }
+.go-right{ animation:go-right 34s linear infinite; }
+
+@keyframes go-left {
+  from{transform:translateX(0)}
+  to  {transform:translateX(-50%)}
+}
+@keyframes go-right{
+  from{transform:translateX(-50%)}
+  to  {transform:translateX(0)}
+}
+
+.trust-bar:hover .track-row{animation-play-state:paused}
+
+.bubble{
+  display:inline-flex;
+  align-items:center;
+  flex-shrink:0;
+  white-space:nowrap;
+  cursor:default;
+  border-radius:100px;
+  padding:6px 18px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.09);
+  position:relative;
+  overflow:hidden;
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  letter-spacing:.05em;
+  color:rgba(255,255,255,.5);
+  transition:border-color .25s,background .25s,color .25s,box-shadow .25s,transform .2s;
+}
+
+/* TOP ROW GREEN */
+.row1 .bubble::before{
+  content:'';
+  position:absolute;
+  top:0;left:15%;right:15%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(22,166,118,.65),transparent);
+}
+.row1 .bubble:hover{
+  background:rgba(22,166,118,.08);
+  border-color:rgba(22,166,118,.35);
+  color:rgba(255,255,255,.9);
+  transform:translateY(-1px);
+  box-shadow:0 0 0 1px rgba(22,166,118,.12),0 4px 18px rgba(22,166,118,.14),inset 0 0 14px rgba(22,166,118,.05);
+}
+.row1 .bubble:hover::before{
+  background:linear-gradient(90deg,transparent,rgba(22,166,118,1),transparent);
+}
+
+/* BOTTOM ROW PURPLE */
+.row2 .bubble::before{
+  content:'';
+  position:absolute;
+  top:0;left:15%;right:15%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(139,92,246,.6),transparent);
+}
+.row2 .bubble:hover{
+  background:rgba(139,92,246,.08);
+  border-color:rgba(139,92,246,.35);
+  color:rgba(255,255,255,.9);
+  transform:translateY(-1px);
+  box-shadow:0 0 0 1px rgba(139,92,246,.12),0 4px 18px rgba(139,92,246,.14),inset 0 0 14px rgba(139,92,246,.05);
+}
+.row2 .bubble:hover::before{
+  background:linear-gradient(90deg,transparent,rgba(139,92,246,1),transparent);
+}
+/* .trust-bar {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   padding: 1.5rem 0;
@@ -398,7 +510,7 @@ h2.section-h2 {
   white-space: nowrap;
 }
 .trust-item .ti-icon { color: var(--accent); font-size: 14px; }
-.trust-divider { width: 1px; height: 16px; background: var(--line); }
+.trust-divider { width: 1px; height: 16px; background: var(--line); } */
 
 /* ============================================================
    SERVICES
@@ -1146,6 +1258,16 @@ footer {
      TRUST BAR
 ============================================================ -->
 <div class="trust-bar">
+  <div class="track-wrap row1">
+    <div class="track-row go-left" id="r1a"></div>
+    <div class="track-row go-left" id="r1b" aria-hidden="true"></div>
+  </div>
+  <div class="track-wrap row2">
+    <div class="track-row go-right" id="r2a"></div>
+    <div class="track-row go-right" id="r2b" aria-hidden="true"></div>
+  </div>
+</div>
+<!-- <div class="trust-bar">
   <div class="trust-inner">
     <div class="trust-item"><span class="ti-icon">✦</span> ISO 27001 gap analysis</div>
     <div class="trust-divider"></div>
@@ -1158,7 +1280,7 @@ footer {
     <div class="trust-item"><span class="ti-icon">✦</span> GDPR · NIS2 · HIPAA · PCI DSS · SOC 2 · PIPA</div>
     <div class="trust-divider"></div>
   </div>
-</div>
+</div> -->
 
 <!-- ============================================================
      SERVICES
@@ -1748,6 +1870,32 @@ const sectionObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.4 });
 
 sections.forEach(s => sectionObserver.observe(s));
+
+// Trust Bar
+const row1 = [
+  'ISO 27001 gap analysis','ISO 42001 AI governance','IEC 62443 OT security',
+  'M&A cyber due diligence','AI security assessment','NIS2 readiness',
+  'Risk identification & management','Compliance programme delivery',
+  'vCISO advisory','IT / OT convergence security',
+];
+const row2 = [
+  'GDPR','NIS2','HIPAA','PCI DSS','SOC 2','PIPA',
+  'Cyber Essentials','NIST CSF 2.0','EU AI Act',
+  'ISO 27001','ISO 42001','IEC 62443','UK GDPR','SOC 2 Type II',
+];
+function makeBubble(text){
+  const b=document.createElement('div');
+  b.className='bubble';
+  b.textContent=text;
+  return b;
+}
+function fillRow(idA,idB,items){
+  const a=document.getElementById(idA);
+  const b=document.getElementById(idB);
+  [...items,...items].forEach(t=>{a.appendChild(makeBubble(t));b.appendChild(makeBubble(t));});
+}
+fillRow('r1a','r1b',row1);
+fillRow('r2a','r2b',row2);
 </script>
 </body>
 </html>
